@@ -1,0 +1,6 @@
+{
+  "name": "PBSC Analyzer",
+  "tagline": "",
+  "body": "### Welcome.\r\n**PBSC Analyzer** - Allows you to analyze Power Builder source code in a convenient way.\r\nIt has: \r\n* Advanced syntax highlighting;\r\n* Object navigation;\r\n\r\n_**Note:** It uses extracted PowerBuilder objects (\\*.sr\\*) for analyzing_\r\n\r\n*More documentation and compiled binaries will come soon... Please contact me if you are interesting in this tool*",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}

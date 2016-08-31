@@ -217,6 +217,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="3d bar chart.ico" />
+    <Content Include="license.txt" />
     <Content Include="license-Weifen Luo.txt" />
   </ItemGroup>
   <ItemGroup>

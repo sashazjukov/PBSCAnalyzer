@@ -75,7 +75,7 @@ namespace PBSCAnalyzer
             }
             else
             {
-                CreateAnalyzerPanell();
+               // CreateAnalyzerPanell();
                 MainEngine.Instance.AnalayzeFileForTypes(this.FileClass);
                 _objectExplorerPanel.SetObjectsList(this.FileClass);
             }

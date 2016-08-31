@@ -667,7 +667,7 @@ namespace PBSCAnalyzer
 
         public void SetMainFormCaption()
         {
-            MainForm.Text = $"PB Analyzer [{App.Configuration.CurrentWorkSpaceName}]";
+            MainForm.Text = $"PBSC Analyzer [{App.Configuration.CurrentWorkSpaceName}]";
         }
 
         private void ShowWaitPanel(bool b)

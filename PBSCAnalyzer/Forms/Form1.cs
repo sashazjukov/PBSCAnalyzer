@@ -27,7 +27,7 @@ namespace PBSCAnalyzer
             this.Closing+=OnClosing;
             
             TopLevel = true;
-            this.Text = "PB Analyzer";            
+            this.Text = "PBSC Analyzer";            
             _solutionTree = new SolutionTree();
             _openedDocumentsPanel = new OpenedDocumentsPanel();
             _solutionTree.Show(MainDockPanel, DockState.DockLeft);

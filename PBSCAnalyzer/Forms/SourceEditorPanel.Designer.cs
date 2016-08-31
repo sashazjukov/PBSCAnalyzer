@@ -66,8 +66,8 @@
             this.toolStripButton2.ImageTransparentColor = System.Drawing.Color.Silver;
             this.toolStripButton2.Name = "toolStripButton2";
             this.toolStripButton2.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton2.Text = "Find selected text in file names";
-            this.toolStripButton2.ToolTipText = "Find selected text in file names";
+            this.toolStripButton2.Text = "Find selected text in file names (RegEx)";
+            this.toolStripButton2.ToolTipText = "Find selected text in file names (RegEx)";
             this.toolStripButton2.Click += new System.EventHandler(this.toolStripButton2_Click);
             // 
             // toolStripButton3
@@ -77,7 +77,7 @@
             this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Silver;
             this.toolStripButton3.Name = "toolStripButton3";
             this.toolStripButton3.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton3.Text = "Find selected text in each file";
+            this.toolStripButton3.Text = "Find selected text in each file (RegEx)";
             this.toolStripButton3.Click += new System.EventHandler(this.toolStripButton3_Click_1);
             // 
             // toolStripSeparator1
@@ -92,8 +92,8 @@
             this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Silver;
             this.toolStripButton1.Name = "toolStripButton1";
             this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton1.Text = "Find selected text in current document";
-            this.toolStripButton1.ToolTipText = "Find selected text in current document";
+            this.toolStripButton1.Text = "Find selected text in current document (RegEx)";
+            this.toolStripButton1.ToolTipText = "Find selected text in current document (RegEx)";
             this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
             // 
             // toolStripSeparator2
@@ -119,7 +119,7 @@
             this.toolStripButton4.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolStripButton4.Name = "toolStripButton4";
             this.toolStripButton4.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButton4.Text = "Do Indent";
+            this.toolStripButton4.Text = "Reload file";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
             // fastColoredTextBox1

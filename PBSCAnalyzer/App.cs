@@ -25,7 +25,12 @@ namespace PBSCAnalyzer
             UserCommandsConfiguration = new UserCommandsConfiguration();
             UserCommandsConfiguration.Initialize(userCommnadsProvider);
 
-            if (UserCommandsConfiguration.UserCommands.Count == 0) { UserCommandsConfiguration.UserCommands.Add(new UserCommand() { ComandCaption = "SVN Log", ComandScript = "TortoiseProc.exe /command:log /path:\"%FilePathName%\"" }); }
+            if (UserCommandsConfiguration.UserCommands.Count == 0)
+            {
+                UserCommandsConfiguration.UserCommands.Add(new UserCommand() { ComandCaption = "SVN Log", ComandScript = "TortoiseProc.exe /command:log /path:\"%FilePathName%\"" });
+                UserCommandsConfiguration.UserCommands.Add(new UserCommand() { ComandCaption = "SVN Blame", ComandScript = "TortoiseProc.exe /command:blame /path:\" % FilePathName % \" /line:%LineNum%" });
+                UserCommandsConfiguration.UserCommands.Add(new UserCommand() { ComandCaption = "Edit", ComandScript = "\"%FilePathName%\"" });
+            }
         }
 
         public static void Save()

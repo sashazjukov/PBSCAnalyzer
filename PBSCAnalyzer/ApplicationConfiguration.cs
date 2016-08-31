@@ -9,7 +9,13 @@ namespace PBSCAnalyzer
     {
         public UserCommandsConfiguration()
         {
-            UserCommands = new List<UserCommand>();            
+            UserCommands = new List<UserCommand>();
+            //if (UserCommands.Count ==0)
+            //{
+            //    UserCommands.Add(new UserCommand() {ComandCaption = "SVN Log", ComandScript = "TortoiseProc.exe /command:log /path:\"%FilePathName%\""});
+            //    UserCommands.Add(new UserCommand() {ComandCaption = "SVN Blame", ComandScript = "TortoiseProc.exe /command:blame /path:\" % FilePathName % \" /line:%LineNum%"});
+            //    UserCommands.Add(new UserCommand() {ComandCaption = "Edit", ComandScript = "\"%FilePathName%\""});
+            //}
         }
 
         public List<UserCommand> UserCommands { get; set; }

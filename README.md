@@ -12,6 +12,10 @@
 
 _**Note:** It uses extracted PowerBuilder objects (\*.sr\*) for analyzing. if you need a tool for extracting .sr\* files then contact me._
 
+###Instalation###
+
+Dounload and unzip the latest binaries [PBSC Analyzer v1.0.0-beta](https://github.com/sashazjukov/PBSCAnalyzer/releases/tag/v1.0.0-beta)
+
 ###Quick start###
 * Add sources to the curent workspace
 

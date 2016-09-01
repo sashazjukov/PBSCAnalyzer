@@ -2,12 +2,13 @@
 **PBSC Analyzer** - Allows you to analyze PowerBuilder source code in a convenient way.
 
 ###Features:###
-* Advanced syntax highlighting for PowerBuilder code and SQL code;
+* Advanced syntax highlighting for PowerBuilder (PowerScript) code and SQL code;
 * Parse .sr\* files and detect objects/events/functions;
 * Object navigation;
-* RegEx based text search;
+* Fast RegEx based text search;
 * Custom batch commands over the file;
 * Workspaces to manage different projects
+* DataWindow debugging helper
 
 _**Note:** It uses extracted PowerBuilder objects (\*.sr\*) for analyzing. if you need a tool for extracting .sr\* files then contact me._
 

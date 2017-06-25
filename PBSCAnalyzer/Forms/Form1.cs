@@ -210,16 +210,67 @@ namespace PBSCAnalyzer
                 MessageBox.Show("Clipboard is empty!", "Error!");
                 return;
             }
-//            if (Regex.Match(datawindowName, @"^\b[a-zA-Z0-9_]+\b$").Success == false)
-//            {
-//                MessageBox.Show("Should be one word!","Error!");
-//                return;
-//            }
-            string pathToDw = @"c:\development\AZU\debubpb\"+datawindowName+".xls";
-            string dwTemplate = datawindowName+".saveas(\"" + pathToDw + "\", Excel!, true)";
+            //            if (Regex.Match(datawindowName, @"^\b[a-zA-Z0-9_]+\b$").Success == false)
+            //            {
+            //                MessageBox.Show("Should be one word!","Error!");
+            //                return;
+            //            }
+            string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xml";
+            string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", xml!, true)";
+
+            //string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xls";
+            //string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", Excel!, true)";
             string result = dwTemplate;
             Clipboard.SetText(result);
-            MessageBox.Show(""+result,"-= Success! =-");
+            ShowDebugDWPanel(pathToDw);
+            //MessageBox.Show(""+result,"-= Success! =-");
+        }
+
+        private DebugDWPanel _panel;
+        private void ShowDebugDWPanel(string file)
+        {
+            if (_panel == null)
+            {
+                _panel = new DebugDWPanel();
+            }
+            DebugDWPanel panel = new DebugDWPanel();
+            panel.file = file;
+            panel.CreateFileWatcher();
+            MainEngine.Instance.ShowPanel(panel);
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click_1(object sender, EventArgs e)
+        {
+            MainEngine.Instance.SaveWarkSpace();
+        }
+
+        private void toolStripButton4_Click(object sender, EventArgs e)
+        {
+            string datawindowName = Clipboard.GetText();
+            if (string.IsNullOrEmpty(datawindowName))
+            {
+                MessageBox.Show("Clipboard is empty!", "Error!");
+                return;
+            }
+            //            if (Regex.Match(datawindowName, @"^\b[a-zA-Z0-9_]+\b$").Success == false)
+            //            {
+            //                MessageBox.Show("Should be one word!","Error!");
+            //                return;
+            //            }
+            //string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xml";
+            //string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", xml!, true)";
+
+            string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xls";
+            string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", Excel!, true)";
+            string result = dwTemplate;
+            Clipboard.SetText(result);
+            //ShowDebugDWPanel(pathToDw);
+            MessageBox.Show("" + result, "-= Success! =-");
         }
     }
 }

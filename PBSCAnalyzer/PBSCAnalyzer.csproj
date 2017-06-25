@@ -85,6 +85,12 @@
     <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DebugDWPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DebugDWPanel.Designer.cs">
+      <DependentUpon>DebugDWPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FindInSourcePanel.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     <Compile Include="WorkSpaceItem.cs" />
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DebugDWPanel.resx">
+      <DependentUpon>DebugDWPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FindInSourcePanel.resx">
       <DependentUpon>FindInSourcePanel.cs</DependentUpon>

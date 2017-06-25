@@ -115,7 +115,7 @@ namespace PBSCAnalyzer
                     }
                     fileClass.IsOpened = true;
                     newDocument = CreateNewDocument(fileClass);
-                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();                    
                 }
                 else
                 {
@@ -137,7 +137,7 @@ namespace PBSCAnalyzer
             sourceContainerDocument.SetSourceFileClass(fileClass);
         }
 
-        private void ShowPanel(SourceContainerDocument dummyDoc)
+        public void ShowPanel(DockContent dummyDoc)
         {
                   dummyDoc.Show(MainDockPanel); 
         }
@@ -207,6 +207,10 @@ namespace PBSCAnalyzer
             { if (eSearchIn == ESearchIn.FileName) { SetSolutionTreeStatusText($"{_totalFiind} file names match '{text}'"); } }
             { if (eSearchIn == ESearchIn.FileText) { SetSolutionTreeStatusText($"{_totalFiind} files containing '{text}'"); } }
             treeView.EndUpdate();
+            if (treeView.Nodes.Count > 0)
+            {
+                treeView.SelectedNode = treeView.Nodes[0];
+            }
         }
 
         private void ProcessFindInNodes(TreeNode folderNode, TreeNodeCollection treeNodeCollection, ESearchIn eSearchIn, string lower, string text, SearchInFileCriteria searchInFileCriteria, List<TreeNode> toRemoveParentFolder)

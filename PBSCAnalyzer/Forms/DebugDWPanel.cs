@@ -85,7 +85,8 @@ namespace PBSCAnalyzer.Forms
                                 
 
                 // Specify what is done when a file is changed, created, or deleted.
-                this.Invoke(new MethodInvoker(() => {
+                MainEngine.Instance.MainForm.Invoke(new MethodInvoker(() =>
+                {
                     var ff = this.Controls.OfType<DataGridView>().ToList();
                     foreach (DataGridView item in ff)
                     {
@@ -95,7 +96,7 @@ namespace PBSCAnalyzer.Forms
                     //var dt = TransposeDataTable(dtsourcfe);
                     foreach (DataTable table in ds.Tables)
                     {
-                       
+
                         var dt = TransposeDataTable(table);
                         DataGridView dgrv = new DataGridView();
                         this.Controls.Add(dgrv);

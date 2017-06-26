@@ -227,16 +227,17 @@ namespace PBSCAnalyzer
         }
 
         private DebugDWPanel _panel;
+        private DebugDWContainer debugContainer;
         private void ShowDebugDWPanel(string file)
         {
-            if (_panel == null)
+            if (debugContainer == null)
             {
-                _panel = new DebugDWPanel();
+                debugContainer = new DebugDWContainer();
             }
-            DebugDWPanel panel = new DebugDWPanel();
-            panel.file = file;
-            panel.CreateFileWatcher();
-            MainEngine.Instance.ShowPanel(panel);
+
+            debugContainer.ShowOrSwitchPanel(file);
+            MainEngine.Instance.ShowPanel(debugContainer);
+                       
         }
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)

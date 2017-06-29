@@ -24,9 +24,9 @@ namespace PBSCAnalyzer.Forms
             InitializeComponent();
             historyList = new ListBox();
             this.Controls.Add(historyList);
-            historyList.Dock = DockStyle.Fill;
+            historyList.Dock = DockStyle.Right;
             historyList.Width = 80;            
-            dataTAbleLogManager = new DataTablesLogManager(historyList);
+            dataTAbleLogManager = new DataTablesLogManager(historyList, ShowDataGridViews);
         }
 
         private ListBox historyList;
@@ -102,45 +102,8 @@ namespace PBSCAnalyzer.Forms
                 // Specify what is done when a file is changed, created, or deleted.
                 MainEngine.Instance.MainForm.Invoke(new MethodInvoker(() =>
                 {
-                    var ff = this.Controls.OfType<DataGridView>().ToList();
-                    
-
-                    int icontrolIndex=0;
-                    string changeTime = File.GetLastWriteTime(file).ToString("mm:ss");
-                    this.Text = Path.GetFileName(file) + " " + changeTime;
-                    DataTableCollection tables = ds.Tables;
-
-                    if (ds.Tables.Count == 0) {
-                        foreach (DataGridView item in ff)
-                        {
-                            this.Controls.Remove(item);
-                        }
-                    };
-
-                    dataTAbleLogManager.AddNewEntry(changeTime);                    
-
-                    //var dt = TransposeDataTable(dtsourcfe);
-                    foreach (DataTable table in tables)
-                    {                        
-                        var dt = TransposeDataTable(table);
-                        DataGridView dgrv = null;;
-                        if (ff.Count > icontrolIndex)
-                        {
-                            dgrv = ff[icontrolIndex++];
-                        }
-                        if (dgrv == null)
-                        {
-                            dgrv = new DataGridView();
-                            this.Controls.Add(dgrv);
-                            dgrv.Dock = DockStyle.Left;
-                            dgrv.Width = (this.Width - 80) / tables.Count;
-                            dgrv.DataSource = dt;                                                        
-                        }
-
-                        dataTAbleLogManager.AddTable(dt);
-                        dataTAbleLogManager.HighlightChangesInLadsTable(dgrv);
-                        DatagridUtils.FormatDataGridView(tables.Count, dgrv);
-                    }
+                    List<DataTable> tables = ConvertToTables(ds);
+                    ShowDataGridViews(tables, false);
                 }
                 ));
                 //Debug.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
@@ -150,7 +113,75 @@ namespace PBSCAnalyzer.Forms
                 MessageBox.Show(ex.Message);
             }
         }
-        
+
+        public void ShowDataGridViews(List<DataTable> tables, Boolean isFromHistory)
+        {
+            int icontrolIndex = 0;
+            string changeTime = "history";
+            if (!isFromHistory)
+            {
+                changeTime = File.GetLastWriteTime(file).ToString("mm:ss");
+                this.Text = Path.GetFileName(file) + " " + changeTime;
+            }
+            dataTAbleLogManager.AddNewEntry(changeTime);
+
+
+            var ff = this.Controls.OfType<DataGridView>().ToList();
+
+            if (tables.Count == 0)
+            {
+                foreach (DataGridView item in ff)
+                {
+                    this.Controls.Remove(item);
+                }
+            };
+
+            //var dt = TransposeDataTable(dtsourcfe);
+            foreach (DataTable table in tables)
+            {
+                DataTable dt = table;
+                if (!isFromHistory)
+                {
+                    dt = TransposeDataTable(table);
+                }
+                DataGridView dgrv = null; ;
+                if (ff.Count > icontrolIndex)
+                {
+                    dgrv = ff[icontrolIndex++];
+                }
+                if (dgrv == null)
+                {
+                    dgrv = new DataGridView();
+                    this.Controls.Add(dgrv);
+                    dgrv.Dock = DockStyle.Left;
+                    dgrv.Width = (this.Width - 80) / tables.Count;
+                    dgrv.DataSource = dt;
+                }
+
+                // if (!isFromHistory)
+                {
+                    dataTAbleLogManager.AddTable(dt);
+                }
+                dataTAbleLogManager.HighlightChangesInLadsTable(dgrv, isFromHistory);
+
+                DatagridUtils.FormatDataGridView(tables.Count, dgrv);
+            }
+            if (!isFromHistory)
+            {
+                dataTAbleLogManager.RemoveLastLogIfNotHighlighted();
+            }
+        }
+
+        private static List<DataTable> ConvertToTables(DataSet ds)
+        {
+            List<DataTable> tables = new List<DataTable>();
+            foreach (DataTable item in ds.Tables)
+            {
+                tables.Add(item);
+            }
+
+            return tables;
+        }
 
         private DataTablesLogManager dataTAbleLogManager;
         
@@ -258,9 +289,21 @@ namespace PBSCAnalyzer.Forms
             _visualList.SelectedIndexChanged += _visualList_SelectedIndexChanged;
         }
 
+        public DataTablesLogManager(ListBox visualList, Action<List<DataTable>, bool> showDataGridViews) : this(visualList)
+        {
+            this.showDataGridViews = showDataGridViews;
+        }
+
         private void _visualList_SelectedIndexChanged(object sender, EventArgs e)
         {
-           // DataTablesLogEntity logEntity =  (DataTablesLogEntity)_visualList.Items[_visualList.SelectedIndex-1];            
+            if (_visualList.SelectedIndex >= 0 && _visualList.Items.Count > 0)
+            {
+                DataTablesLogEntity logEntity = (DataTablesLogEntity)_visualList.Items[_visualList.SelectedIndex];
+                indexOfPrevLogEntity = _visualList.SelectedIndex - 1;
+                //if (indexOfPrevLogEntity < 0) indexOfPrevLogEntity = 0;
+                showDataGridViews.Invoke(logEntity.dataTables, true);
+                RemoveLastLogItem();
+            }
         }
 
         internal void AddNewEntry(string changeTime)
@@ -269,6 +312,7 @@ namespace PBSCAnalyzer.Forms
             dataTablesLogEntity.displayValue = changeTime;
             dataTablesLog.Add(dataTablesLogEntity);
             _visualList.Items.Add(dataTablesLogEntity);
+            wasHighlighted = false;
         }
 
         internal void AddTable(DataTable dt)
@@ -279,21 +323,43 @@ namespace PBSCAnalyzer.Forms
 
         Boolean wasHighlighted;
         private ListBox _visualList;
+        private Action<List<DataTable>, bool> showDataGridViews;
 
-        internal bool HighlightChangesInLadsTable(DataGridView dgrv)
+        int indexOfPrevLogEntity = 0;
+
+        internal bool HighlightChangesInLadsTable(DataGridView dgrv, Boolean isFromHistory)
         {
-            wasHighlighted = false;
-            DataTablesLogEntity lastInLog = dataTablesLog.Last<DataTablesLogEntity>();
+            int indexOfChanges = -1;
+            DataTablesLogEntity lastInLog;
+            if (indexOfChanges >= 0) {
+                
+            } else {
+                lastInLog = dataTablesLog.Last<DataTablesLogEntity>();
+                indexOfChanges = dataTablesLog.IndexOf(lastInLog);
+            }
+            lastInLog = dataTablesLog[indexOfChanges];
             var lastTable = lastInLog.dataTables.Last();
+
             var index = lastInLog.dataTables.IndexOf(lastTable);
             if (dataTablesLog.Count >= 2)
             {
-                var prevInLog = dataTablesLog[dataTablesLog.Count - 2];
-                DataTable prevTable = null;
-                if (index + 1 <= prevInLog.dataTables.Count)
+                if (!isFromHistory)
                 {
-                    prevTable = prevInLog.dataTables[index];
-                } 
+                    indexOfPrevLogEntity = dataTablesLog.Count - 2;
+                }
+
+                DataTable prevTable = null;
+                if (indexOfPrevLogEntity >= 0)
+                {
+                    var prevInLog = dataTablesLog[indexOfPrevLogEntity];
+                    if (index + 1 <= prevInLog.dataTables.Count)
+                    {
+                        prevTable = prevInLog.dataTables[index];
+                    }
+                }
+                else {
+
+                }            
                 if ((prevTable != null) && (lastTable.Columns.Count == prevTable.Columns.Count) && (lastTable.Rows.Count == prevTable.Rows.Count))
                 {
                     for (int j = 0; j <= lastTable.Columns.Count - 1; j++)
@@ -311,11 +377,7 @@ namespace PBSCAnalyzer.Forms
                                 dgrv.Rows[k].Cells[j].Style.BackColor = Color.White;
                             }
                         }
-                    }
-                    if (!wasHighlighted)
-                    {
-                        RemoveLastLogItem();
-                    }
+                    }                    
                 }
                 else {
                     dgrv.DataSource = lastTable;
@@ -323,8 +385,19 @@ namespace PBSCAnalyzer.Forms
                     wasHighlighted = true;
                 }
 
-            }            
+            }else
+            {
+                wasHighlighted = true;
+            }
             return wasHighlighted;
+        }
+
+        public void RemoveLastLogIfNotHighlighted()
+        {
+            if (!wasHighlighted)
+            {
+                RemoveLastLogItem();
+            }
         }
 
         private void RemoveLastLogItem()

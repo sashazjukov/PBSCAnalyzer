@@ -22,7 +22,14 @@ namespace PBSCAnalyzer.Forms
         public DebugDWPanel()
         {
             InitializeComponent();
+            historyList = new ListBox();
+            this.Controls.Add(historyList);
+            historyList.Dock = DockStyle.Fill;
+            historyList.Width = 80;            
+            dataTAbleLogManager = new DataTablesLogManager(historyList);
         }
+
+        private ListBox historyList;
 
         public void CreateFileWatcher()
         {
@@ -35,8 +42,7 @@ namespace PBSCAnalyzer.Forms
                 watcher.Path = path;
                 /* Watch for changes in LastAccess and LastWrite times, and 
                    the renaming of files or directories. */
-                watcher.NotifyFilter = NotifyFilters.LastWrite
-                   | NotifyFilters.FileName | NotifyFilters.DirectoryName | NotifyFilters.CreationTime;
+                watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.CreationTime;
                 // Only watch text files.
                 watcher.Filter = Path.GetFileName(file);
 
@@ -56,18 +62,27 @@ namespace PBSCAnalyzer.Forms
         }
         private const int NumberOfRetries = 3;
         private const int DelayOnRetry = 500;
+        
         // Define the event handlers.
-        private  void OnChanged(object source, FileSystemEventArgs e)
+        private void OnChanged(object source, FileSystemEventArgs e)
         {
-            try { 
-            var ds = new DataSet();
+            try
+            {
+                DateTime ChangedOn = File.GetLastWriteTime(file);
+                if (ChangedOn != lastCahnged)
+                {
+                    lastCahnged = File.GetLastWriteTime(file);
+                }
+                else { return; }
+
+                var ds = new DataSet();
                 DataTable dtsourcfe = null;
 
                 for (int i = 1; i <= NumberOfRetries; ++i)
                 {
                     try
                     {
-                        Thread.Sleep(200);
+                        Thread.Sleep(100);
                         ds.ReadXml(file);
                         //dtsourcfe = getDataFromXLS(file);
                         break; // When done we can break loop
@@ -82,51 +97,64 @@ namespace PBSCAnalyzer.Forms
                         Thread.Sleep(DelayOnRetry);
                     }
                 }
-                                
+
 
                 // Specify what is done when a file is changed, created, or deleted.
                 MainEngine.Instance.MainForm.Invoke(new MethodInvoker(() =>
                 {
                     var ff = this.Controls.OfType<DataGridView>().ToList();
-                    foreach (DataGridView item in ff)
-                    {
-                        this.Controls.Remove(item);
-                    }
+                    
+
+                    int icontrolIndex=0;
+                    string changeTime = File.GetLastWriteTime(file).ToString("mm:ss");
+                    this.Text = Path.GetFileName(file) + " " + changeTime;
+                    DataTableCollection tables = ds.Tables;
+
+                    if (ds.Tables.Count == 0) {
+                        foreach (DataGridView item in ff)
+                        {
+                            this.Controls.Remove(item);
+                        }
+                    };
+
+                    dataTAbleLogManager.AddNewEntry(changeTime);                    
 
                     //var dt = TransposeDataTable(dtsourcfe);
-                    foreach (DataTable table in ds.Tables)
-                    {
-
+                    foreach (DataTable table in tables)
+                    {                        
                         var dt = TransposeDataTable(table);
-                        DataGridView dgrv = new DataGridView();
-                        this.Controls.Add(dgrv);
-                        dgrv.Dock = DockStyle.Left;
-                        dgrv.Width = this.Width / ds.Tables.Count;
-                        //dataGridView1.DataSource = dt;
-                        dgrv.DataSource = dt;
-                        this.Text = Path.GetFileName(file) + " " + File.GetLastWriteTime(file).ToString("mm:ss");
-                        for (int i = 0; i < dgrv.Columns.Count - 1; i++)
+                        DataGridView dgrv = null;;
+                        if (ff.Count > icontrolIndex)
                         {
-                            dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                            dgrv = ff[icontrolIndex++];
                         }
-                        dgrv.Columns[dgrv.Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                        if (dgrv == null)
+                        {
+                            dgrv = new DataGridView();
+                            this.Controls.Add(dgrv);
+                            dgrv.Dock = DockStyle.Left;
+                            dgrv.Width = (this.Width - 80) / tables.Count;
+                            dgrv.DataSource = dt;                                                        
+                        }
 
-                        for (int i = 0; i < dgrv.Columns.Count; i++)
-                        {
-                            int colw = dgrv.Columns[i].Width;
-                            dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                            dgrv.Columns[i].Width = colw;
-                        }
+                        dataTAbleLogManager.AddTable(dt);
+                        dataTAbleLogManager.HighlightChangesInLadsTable(dgrv);
+                        DatagridUtils.FormatDataGridView(tables.Count, dgrv);
                     }
                 }
                 ));
-            Debug.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
+                //Debug.WriteLine("File: " + e.FullPath + " " + e.ChangeType);
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
         }
+        
+
+        private DataTablesLogManager dataTAbleLogManager;
+        
+        public DateTime lastCahnged { get; private set; }
 
         private DataTable getDataFromXLS(string strFilePath)
         {
@@ -198,5 +226,119 @@ namespace PBSCAnalyzer.Forms
             transposedTable = defaultView.ToTable();
             return transposedTable;
         }
+    }
+
+    public static class DatagridUtils {
+        public static void FormatDataGridView(int countTables, DataGridView dgrv)
+        {            
+            for (int i = 0; i < dgrv.Columns.Count - 1; i++)
+            {
+                dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+                
+            }
+            dgrv.Columns[dgrv.Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+
+            for (int i = 0; i < dgrv.Columns.Count; i++)
+            {
+                int colw = Math.Min(dgrv.Columns[i].Width,200);
+                dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                dgrv.Columns[i].Width = colw;                
+            }
+        }
+    }
+
+    internal class DataTablesLogManager
+    {
+        public List<DataTablesLogEntity> dataTablesLog = new List<DataTablesLogEntity>();
+
+        public DataTablesLogManager(ListBox visualList)
+        {
+            _visualList = visualList;
+            _visualList.DisplayMember = "displayValue";
+            _visualList.SelectedIndexChanged += _visualList_SelectedIndexChanged;
+        }
+
+        private void _visualList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+           // DataTablesLogEntity logEntity =  (DataTablesLogEntity)_visualList.Items[_visualList.SelectedIndex-1];            
+        }
+
+        internal void AddNewEntry(string changeTime)
+        {
+            DataTablesLogEntity dataTablesLogEntity = new DataTablesLogEntity();
+            dataTablesLogEntity.displayValue = changeTime;
+            dataTablesLog.Add(dataTablesLogEntity);
+            _visualList.Items.Add(dataTablesLogEntity);
+        }
+
+        internal void AddTable(DataTable dt)
+        {
+            DataTablesLogEntity lastInLog = dataTablesLog.Last<DataTablesLogEntity>();
+            lastInLog.dataTables.Add(dt);
+        }
+
+        Boolean wasHighlighted;
+        private ListBox _visualList;
+
+        internal bool HighlightChangesInLadsTable(DataGridView dgrv)
+        {
+            wasHighlighted = false;
+            DataTablesLogEntity lastInLog = dataTablesLog.Last<DataTablesLogEntity>();
+            var lastTable = lastInLog.dataTables.Last();
+            var index = lastInLog.dataTables.IndexOf(lastTable);
+            if (dataTablesLog.Count >= 2)
+            {
+                var prevInLog = dataTablesLog[dataTablesLog.Count - 2];
+                DataTable prevTable = null;
+                if (index + 1 <= prevInLog.dataTables.Count)
+                {
+                    prevTable = prevInLog.dataTables[index];
+                } 
+                if ((prevTable != null) && (lastTable.Columns.Count == prevTable.Columns.Count) && (lastTable.Rows.Count == prevTable.Rows.Count))
+                {
+                    for (int j = 0; j <= lastTable.Columns.Count - 1; j++)
+                    {
+                        for (int k = 0; k <= lastTable.Rows.Count - 1; k++)
+                        {
+                            if (lastTable.Rows[k][j].ToString() != prevTable.Rows[k][j].ToString())
+                            {
+                                dgrv.Rows[k].Cells[j].Style.BackColor = Color.Yellow;
+                                dgrv.Rows[k].Cells[j].Value = lastTable.Rows[k][j];
+                                wasHighlighted = true;
+                            }
+                            else
+                            {
+                                dgrv.Rows[k].Cells[j].Style.BackColor = Color.White;
+                            }
+                        }
+                    }
+                    if (!wasHighlighted)
+                    {
+                        RemoveLastLogItem();
+                    }
+                }
+                else {
+                    dgrv.DataSource = lastTable;
+                    DatagridUtils.FormatDataGridView(lastInLog.dataTables.Count, dgrv);
+                    wasHighlighted = true;
+                }
+
+            }            
+            return wasHighlighted;
+        }
+
+        private void RemoveLastLogItem()
+        {
+            DataTablesLogEntity lastInLog = dataTablesLog.Last<DataTablesLogEntity>();
+            dataTablesLog.Remove(lastInLog);
+            _visualList.Items.Remove(lastInLog);
+
+        }
+    }
+
+    internal class DataTablesLogEntity
+    {
+        public string displayValue { get; set; }
+       public List<DataTable> dataTables = new List<DataTable>();
     }
 }

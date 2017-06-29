@@ -23,17 +23,20 @@ namespace PBSCAnalyzer.Forms
         internal void ShowOrSwitchPanel(string file)
         {
             DebugDWPanel panel = null;
+            IDockContent firstOrDefault = null;
             // dockPanel1.
             DockPane orDefault = dockPanel1.Panes.FirstOrDefault(x => x.Appearance == DockPane.AppearanceStyle.Document);
             if (orDefault != null)
             {
-                IDockContent firstOrDefault = orDefault.Contents.FirstOrDefault(s => (s is DebugDWPanel) && ((DebugDWPanel)s).file == file);
-                if (firstOrDefault != null) { panel = firstOrDefault as DebugDWPanel; } else {
-                    panel = new DebugDWPanel();
-                    panel.file = file;
-                    panel.CreateFileWatcher();
-                }
-            }                        
+                firstOrDefault = orDefault.Contents.FirstOrDefault(s => (s is DebugDWPanel) && ((DebugDWPanel)s).file == file);                
+            }
+            if (firstOrDefault != null) { panel = firstOrDefault as DebugDWPanel; }
+            else
+            {
+                panel = new DebugDWPanel();
+                panel.file = file;
+                panel.CreateFileWatcher();
+            }
             panel.Show(dockPanel1);
         }
     }

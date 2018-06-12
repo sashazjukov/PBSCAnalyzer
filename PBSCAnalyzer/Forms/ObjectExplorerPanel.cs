@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using PBSCAnalyzer.Forms;
 using PBSCAnalyzer.types;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -35,11 +36,12 @@ namespace PBSCAnalyzer
                     treeView1.Nodes.Clear();
                     
                     MainEngine.Instance.FillRnCounts(fileClass.Text);
-                    AddNodeByRegex(fileClass, "Arguments ({0})", @"\,?\(\""(?<name>(\w+))\""\,\s*(?<type>\w+)\)", ":{0} : {1}", 11);
-                    AddNodeByRegex(fileClass, "SQL Columns ({0})", @"(column\=\().*?name\=(?<name>\w+).*?dbname\=\""(?<dbname>(\w|\.)+)\"".*\)", "{0} : {1}", 9);
-                    AddNodeByRegex(fileClass, "Columns ({0})", @"(?<=column\().*?name\=(?<name>\w+).*\)", "{0}", 12);
-                    AddNodeByRegex(fileClass, "Calculated ({0})", @"(?<=compute\().*?expression\=\""(?<expr>.*?)\"".*?name\=(?<name>\w+).*\)", "{1} : {0}", 12);
-                    AddNodeByRegex(fileClass, "Texts ({0})", @"(?<=text\().*?text\=\""(?<expr>.*?)\"".*?name\=(?<name>\w+).*\)", "\"{0}\" : {1}", 15);
+                    AddNodeByRegex(fileClass, "Arguments ({0})", @"\,?\(\""(?<name>(\w+))\""\,\s*(?<type>\w+)\)", ":{0}=? : {1}", 11,"sqlArgument");
+                    AddNodeByRegex(fileClass, "SQL Columns ({0})", @"(column\=\().*?name\=(?<name>\w+).*?dbname\=\""(?<dbname>(\w|\.)+)\"".*\)", "{0} : {1}", 9,"sqlColumns");
+                    AddNodeByRegex(fileClass, "Columns ({0})", @"(?<=column\().*?name\=(?<name>\w+).*\)", "{0}", 12,"pbColumns");
+                    AddNodeByRegex(fileClass, "Reports ({0})", @"(?<=report\().*?dataobject\=\""(?<dataobject>(\w)+)\"".*?name\=(?<name>\w+).*?\)", "{1} : {0}", 12,"reports");
+                    AddNodeByRegex(fileClass, "Calculated ({0})", @"(?<=compute\().*?expression\=\""(?<expr>.*?)\"".*?name\=(?<name>\w+).*\)", "{1} : {0}", 12,"calculated");
+                    AddNodeByRegex(fileClass, "Texts ({0})", @"(?<=text\().*?text\=\""(?<expr>.*?)\"".*?name\=(?<name>\w+).*\)", "\"{0}\" : {1}", 15,"text");
                     //treeView1.ExpandAll();
                 }
                 else if (fileClass.IsSql == false)
@@ -181,7 +183,7 @@ namespace PBSCAnalyzer
             return null;
         }
 
-        private void AddNodeByRegex(FileClass fileClass, string nodeName, string regex, string format, int imageIndex)
+        private void AddNodeByRegex(FileClass fileClass, string nodeName, string regex, string format, int imageIndex, string itemType)
         {
             MatchCollection matchCollection = Regex.Matches(fileClass.Text, regex, RegexOptions.ExplicitCapture);
             var typeNode = new TreeNode();
@@ -193,17 +195,23 @@ namespace PBSCAnalyzer
             foreach (Match match in matchCollection)
             {
                 var node = new TreeNode();                
-                node.Text = string.Format(format, match.Groups[1], match.Groups[2]);
+                
                 node.ImageIndex = imageIndex;
                 node.SelectedImageIndex = node.ImageIndex;
                 var filePositionItem = new FilePositionItem();
+                filePositionItem.FormatForNodeText = format;
                 filePositionItem.IndexItemStart = match.Groups[1].Index;
                 filePositionItem.IndexItemEnd = filePositionItem.IndexItemStart + 10;
-//                filePositionItem.IndexItemEnd = eventMatch.Groups[5].Index + powerBuilderFileType.IndexInstanceVarEnd;
-//                filePositionItem.IsHasCode = eventMatch.Groups[4].Length > 5;
+                filePositionItem.ItemType = itemType;
+                filePositionItem.Name = match.Groups[1].Value;
+                filePositionItem.NameType = match.Groups[2].Value;
+                node.Text = string.Format(format, match.Groups[1], match.Groups[2]);
+                //                filePositionItem.IndexItemEnd = eventMatch.Groups[5].Index + powerBuilderFileType.IndexInstanceVarEnd;
+                //                filePositionItem.IsHasCode = eventMatch.Groups[4].Length > 5;
                 filePositionItem.LineNumberStart = MainEngine.Instance.GetTextLineByCharIndex(filePositionItem.IndexItemStart);
                 filePositionItem.LineNumberEnd = MainEngine.Instance.GetTextLineByCharIndex(filePositionItem.IndexItemEnd);
                 node.Tag = filePositionItem;
+                // child nodes for Calcualted expressions
                 MatchCollection matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<prop>\w+)\=\""(?<val>[^\""]*)\~t(?<expr>.*?)\""", RegexOptions.ExplicitCapture);
                 foreach (Match m in matchExpresionCollection)
                 {
@@ -215,7 +223,26 @@ namespace PBSCAnalyzer
 //                    nodeExpr.NodeFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Italic);
                     nodeExpr.ForeColor = Color.Gray;
                     node.Nodes.Add(nodeExpr);
-                }                
+                }
+                // Child nodes for dropdown date windows
+                matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<dddwname>dddw\.(name|datacolumn|displaycolumn))\=(?<val>\w+)\s", RegexOptions.ExplicitCapture);
+                foreach (Match m in matchExpresionCollection)
+                {
+                    var nodeExpr = new TreeNode();
+                    nodeExpr.Text = string.Format("{0}=  {1}", m.Groups[1], m.Groups[2], m.Groups[3]);
+                    nodeExpr.ImageIndex = 14;
+                    nodeExpr.SelectedImageIndex = node.ImageIndex;
+                    filePositionItem = new FilePositionItem();
+                    filePositionItem.IndexItemStart = match.Groups[1].Index;
+                    filePositionItem.IndexItemEnd = filePositionItem.IndexItemStart + 10;
+                    filePositionItem.LineNumberStart = MainEngine.Instance.GetTextLineByCharIndex(filePositionItem.IndexItemStart);
+                    filePositionItem.LineNumberEnd = MainEngine.Instance.GetTextLineByCharIndex(filePositionItem.IndexItemEnd);
+                    filePositionItem.Name = m.Groups[2].Value;
+                    filePositionItem.ItemType = "dddw";
+                    nodeExpr.Tag = filePositionItem;     
+                    nodeExpr.ForeColor = Color.Gray;
+                    node.Nodes.Add(nodeExpr);
+                }
                 typeNode.Nodes.Add(node);
             }
             treeView1.Nodes.Add(typeNode);
@@ -326,6 +353,7 @@ namespace PBSCAnalyzer
                 if (filePositionItem != null && filePositionItem.ItemType == "DataObjectSource") { textToSearch = filePositionItem.Name; }
                 if (filePositionItem != null && filePositionItem.ItemType == "function") { textToSearch = filePositionItem.Name; }
                 if (filePositionItem != null && filePositionItem.ItemType == "event") { textToSearch = filePositionItem.Name; }
+                if (filePositionItem != null && filePositionItem.ItemType == "dddw") { textToSearch = filePositionItem.Name; }
             }
             else
             {
@@ -337,16 +365,45 @@ namespace PBSCAnalyzer
         }
 
         private void treeView1_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-        {            
-                //if (e.Node != null && e.X > 40)
-                //{
-                //    SourceContainerDocument.ObjecExplorerNodeDoubleClicked(e.Node);                  
-                //}                       
+        {
+            if (e.Node != null && e.X > 40)
+            {
+                var filePositionItem = e.Node.Tag as FilePositionItem;
+                if (filePositionItem != null)
+                {
+                    if (filePositionItem.ItemType == "sqlArgument")
+                    {
+                        string promptValue = Prompt.ShowDialog(":"+filePositionItem.Name, filePositionItem.ArgumentValue);
+                        filePositionItem.ArgumentValue = promptValue;
+                        e.Node.Text = string.Format(filePositionItem.FormatForNodeText, filePositionItem.Name+"= "+ filePositionItem.ArgumentValue, filePositionItem.NameType);
+                    }
+                }
+            }
+            //if (e.Node != null && e.X > 40)
+            //{
+            //    SourceContainerDocument.ObjecExplorerNodeDoubleClicked(e.Node);                  
+            //}                       
         }
 
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
              SourceContainerDocument.ObjecExplorerNodeDoubleClicked(treeView1.SelectedNode);
+        }
+
+        public List<FilePositionItem> GetFilePositionItems()
+        {
+            List<FilePositionItem> list = new List<FilePositionItem>();
+            foreach (TreeNode treeView1Node1 in treeView1.Nodes)
+            {
+                foreach (TreeNode treeView1Node in treeView1Node1.Nodes)
+                {
+                    if (treeView1Node.Tag is FilePositionItem)
+                    {
+                        list.Add(treeView1Node.Tag as FilePositionItem);
+                    }
+                }
+            }
+            return list;
         }
     }
 }

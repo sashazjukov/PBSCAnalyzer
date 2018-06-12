@@ -44,6 +44,10 @@ namespace PBSCAnalyzer
             if (MainEngine.Instance.CloseInBatch == false)
             {                
                 MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                if (App.Configuration.SaveOnCloseOpenDocument)
+                {
+                    MainEngine.Instance.SaveWorkSpace();
+                }
             }
         }
 
@@ -220,6 +224,27 @@ namespace PBSCAnalyzer
         public void ReloadDocumentContent()
         {
             MainEngine.Instance.ReloadDocumentContent(this, FileClass);
+        }
+
+        public void CopySql()
+        {
+            if (SqlPanel != null)
+            {
+                string result = SqlPanel.fastColoredTextBox1.Text;
+                List<FilePositionItem> list = _objectExplorerPanel.GetFilePositionItems();
+                var filePositionItems = list.Where(x=>x.ItemType == "sqlArgument").ToList();
+                filePositionItems.ForEach((item) =>
+                {
+                    string argValue = (item.NameType == "number" ? item.ArgumentValue : "'"+item.ArgumentValue+"'");
+                    if (item.ArgumentValue == "null") {
+                        argValue = "null";
+                    }
+                
+                    argValue += "/*:" + item.Name + "*/";
+                    result = Regex.Replace(result,":" + item.Name, argValue,RegexOptions.IgnoreCase);                
+                });
+                Clipboard.SetText(result);
+            }
         }
     }
 }

@@ -116,7 +116,7 @@ namespace PBSCAnalyzer
                 FileClass.TextState = ETextState.Changed;
             }
             AnalyzeTypesInSource();
-            IsSqlSyntax = IsSqlSyntax ? IsSqlSyntax : FileClass.FilePath.Contains(".sql");
+            IsSqlSyntax = IsSqlSyntax ? IsSqlSyntax : FileClass.FilePath.Contains(".sql") || FileClass.IsSql;
             HighlightEngine.SetSourceRules(sender, IsSqlSyntax, FileClass);            
         }
 
@@ -264,6 +264,11 @@ namespace PBSCAnalyzer
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             SourceContainerDocument.ReloadDocumentContent();
+        }
+
+        private void CopySql_Button_Click(object sender, EventArgs e)
+        {
+            SourceContainerDocument.CopySql();
         }
     }
 }

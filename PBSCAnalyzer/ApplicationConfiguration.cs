@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Xml.Serialization;
@@ -25,6 +26,7 @@ namespace PBSCAnalyzer
     {
         private Font _font;
         public string storedFont;
+        public bool SaveOnCloseOpenDocument = true;
 
         public ApplicationConfiguration()
         {

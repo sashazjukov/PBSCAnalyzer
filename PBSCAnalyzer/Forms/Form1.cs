@@ -50,7 +50,7 @@ namespace PBSCAnalyzer
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             MainEngine.Instance.CloseInBatch = true;            
-            MainEngine.Instance.SaveWarkSpace();
+            MainEngine.Instance.SaveWorkSpace();
             cancelEventArgs.Cancel = false;            
         }
 
@@ -101,7 +101,7 @@ namespace PBSCAnalyzer
         
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            MainEngine.Instance.OpenNewNote();
+            MainEngine.Instance.OpenNewNote(true);
         }
 
         private void toolStripButton1_Click(object sender, EventArgs e)
@@ -136,7 +136,7 @@ namespace PBSCAnalyzer
                 if (inputMessageForm.ShowDialog() == DialogResult.OK)
                 {
                     if (string.IsNullOrEmpty(inputMessageForm.textBox1.Text)) { return;}
-                    MainEngine.Instance.SaveWarkSpace();
+                    MainEngine.Instance.SaveWorkSpace();
                     if (inputMessageForm.checkBox1.Checked == false)
                     {
                         MainEngine.Instance.RemoveSourcePathes();
@@ -145,7 +145,7 @@ namespace PBSCAnalyzer
                     else
                     { MainEngine.Instance.CloneWorkspace(inputMessageForm.textBox1.Text); }
                     if (inputMessageForm.checkBox2.Checked == true) MainEngine.Instance.CloseAllDocuments();
-                    MainEngine.Instance.SaveWarkSpace();                    
+                    MainEngine.Instance.SaveWorkSpace();                    
                     _workspaceListPanel.SetWorkspaceList();
                     MainEngine.Instance.SetMainFormCaption();
                 }
@@ -162,7 +162,7 @@ namespace PBSCAnalyzer
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             MainEngine.Instance.SaveWarkSpace();
+             MainEngine.Instance.SaveWorkSpace();
         }
 
         private void closeAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -247,7 +247,7 @@ namespace PBSCAnalyzer
 
         private void toolStripButton2_Click_1(object sender, EventArgs e)
         {
-            MainEngine.Instance.SaveWarkSpace();
+            MainEngine.Instance.SaveWorkSpace();
         }
 
         private void toolStripButton4_Click(object sender, EventArgs e)

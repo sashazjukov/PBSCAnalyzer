@@ -33,7 +33,7 @@ namespace PBSCAnalyzer.Forms
         private void listBox1_DoubleClick(object sender, EventArgs e)
         {
             //if (MessageBox.Show("Open workspace?"))
-            MainEngine.Instance.SaveWarkSpace();
+            MainEngine.Instance.SaveWorkSpace();
             WorkSpaceItem workSpaceItem = listBox1.SelectedItem as WorkSpaceItem;
             if (workSpaceItem != null) { MainEngine.Instance.LoadWorkSpace(workSpaceItem.Name); }
         }

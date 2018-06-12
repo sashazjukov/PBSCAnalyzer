@@ -39,6 +39,7 @@
             this.WordWrap_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
+            this.CopySql_Button = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).BeginInit();
             this.SuspendLayout();
@@ -52,7 +53,8 @@
             this.toolStripButton1,
             this.toolStripSeparator2,
             this.WordWrap_toolStripButton,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.CopySql_Button});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(847, 25);
@@ -147,7 +149,6 @@
             this.fastColoredTextBox1.DelayedTextChangedInterval = 300;
             this.fastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.fastColoredTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.fastColoredTextBox1.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.fastColoredTextBox1.HighlightingRangeType = FastColoredTextBoxNS.HighlightingRangeType.AllTextRange;
             this.fastColoredTextBox1.IsReplaceMode = false;
             this.fastColoredTextBox1.LeftBracket = '(';
@@ -163,6 +164,17 @@
             this.fastColoredTextBox1.VirtualSpace = true;
             this.fastColoredTextBox1.WordWrapIndent = 10;
             this.fastColoredTextBox1.Zoom = 100;
+            // 
+            // CopySql_Button
+            // 
+            this.CopySql_Button.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.CopySql_Button.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.CopySql_Button.Image = ((System.Drawing.Image)(resources.GetObject("CopySql_Button.Image")));
+            this.CopySql_Button.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.CopySql_Button.Name = "CopySql_Button";
+            this.CopySql_Button.Size = new System.Drawing.Size(63, 22);
+            this.CopySql_Button.Text = "Copy SQL";
+            this.CopySql_Button.Click += new System.EventHandler(this.CopySql_Button_Click);
             // 
             // SourceEditorPanel
             // 
@@ -194,5 +206,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
+        private System.Windows.Forms.ToolStripButton CopySql_Button;
     }
 }

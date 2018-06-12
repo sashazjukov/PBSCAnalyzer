@@ -109,6 +109,7 @@
     <Compile Include="Forms\OpenedDocumentsPanel.Designer.cs">
       <DependentUpon>OpenedDocumentsPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Prompt.cs" />
     <Compile Include="UserCommand.cs" />
     <Compile Include="HighlightEngine.cs" />
     <Compile Include="Forms\InputMessageForm.cs">

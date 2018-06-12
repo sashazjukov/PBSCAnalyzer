@@ -210,3 +210,10 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
+/test_odbs
+/test_odbs
+/test_odbs/test_odbc.csproj
+/test_odbs/Properties/AssemblyInfo.cs
+/test_odbs/Properties
+/test_odbs/Program.cs
+/test_odbs/App.config

@@ -115,7 +115,14 @@ namespace PBSCAnalyzer
                     }
                     fileClass.IsOpened = true;
                     newDocument = CreateNewDocument(fileClass);
-                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();                    
+                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                    if (App.Configuration.SaveOnCloseOpenDocument)
+                    {
+                        if (MainEngine.Instance.IsLoadingWorkspase == false)
+                        {
+                            SaveWorkSpace();
+                        }
+                    }
                 }
                 else
                 {
@@ -456,16 +463,17 @@ namespace PBSCAnalyzer
 //            }
 //        }
 
-        public void OpenNewNote()
+        public void OpenNewNote(bool isSql)
         {
             SourceContainerDocument newDocument;
             FileClass fileClass = new FileClass()
                                   {
-                                      FileName = "note",
+                                      FileName = "SQL Note",
                                       FilePath = "Notes",
                                       TextState = ETextState.ReadNotChanged,                                      
-                                      Name = "note"
-                                  };
+                                      Name = "note",
+                                      IsSql = isSql
+            };
             newDocument = CreateNewDocument(fileClass); 
             ShowPanel(newDocument);
             newDocument.SourceEditorPanel.fastColoredTextBox1.Focus();
@@ -635,7 +643,7 @@ namespace PBSCAnalyzer
             return GetWorkspace(App.Configuration.CurrentWorkSpaceName);
         }
 
-        public void SaveWarkSpace()
+        public void SaveWorkSpace()
         {
             RemeberOpenedDocumentsList();
             App.Save();
@@ -728,7 +736,7 @@ namespace PBSCAnalyzer
             //                                                                                  (node.Tag as FileClass)
             //                                                                              })
 
-            Instance.SaveWarkSpace();
+            Instance.SaveWorkSpace();
             Instance.LoadWorkSpace(App.Configuration.CurrentWorkSpaceName,true);           
         }
 

@@ -16,7 +16,7 @@ namespace PBSCAnalyzer
         public static readonly TextStyle SqlCoulmnsBrown = new TextStyle(new SolidBrush(Color.FromArgb(255, 39, 134, 148)), null, FontStyle.Bold);
         public static readonly MarkerStyle SearchRelultInSourcePanelStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(80, Color.LightSkyBlue)));
 
-        public static MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.Gray)));
+        public static MarkerStyle SameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.DarkGray)));
         public static MarkerStyle WhiteRangeStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(40, Color.FromArgb(254, 172, 172))));
         public static  TextStyle TypeStyle = new TextStyle(Brushes.Black, null, FontStyle.Bold);
         public static Style sameWordsStyle = new MarkerStyle(new SolidBrush(Color.FromArgb(80, Color.Lime)));        

@@ -188,7 +188,7 @@ namespace PBSCAnalyzer
             _currentProgress = 1;
             _maxProgress = 0;
 
-            GeneralTreeNodeCollection.ForEach(x => _maxProgress += x.Nodes.Count);
+           // GeneralTreeNodeCollection.ForEach(x => _maxProgress += x.Nodes.Count);
             SetSolutionTreeStatusText("Searching...");
             SetSearchProgress(0);
 
@@ -261,7 +261,7 @@ namespace PBSCAnalyzer
                                     if (match.Success)
                                     {
                                         string lineText = line.Trim();
-                                        var node = new TreeNode() {Name = line, ImageIndex = 7, SelectedImageIndex = 7, Text = $"{lineNum + 1} - {lineText} ", Tag = new SearchInFileLineItem() {LineNum = lineNum, TextLine = lineText, SearchInFileCriteria = searchInFileCriteria}};
+                                        var node = new TreeNode() {Name = line, ImageIndex = 7, SelectedImageIndex = 7, Text = $"{lineText}", Tag = new SearchInFileLineItem() {LineNum = lineNum, TextLine = lineText, SearchInFileCriteria = searchInFileCriteria}};
                                         node.NodeFont = new Font("Microsoft Sans Serif", 8.25f, FontStyle.Regular);
                                         fileNode.Nodes.Add(node);
                                         totalLinesFind++;
@@ -463,7 +463,7 @@ namespace PBSCAnalyzer
 //            }
 //        }
 
-        public void OpenNewNote(bool isSql)
+        public SourceContainerDocument OpenNewNote(bool isSql)
         {
             SourceContainerDocument newDocument;
             FileClass fileClass = new FileClass()
@@ -477,6 +477,7 @@ namespace PBSCAnalyzer
             newDocument = CreateNewDocument(fileClass); 
             ShowPanel(newDocument);
             newDocument.SourceEditorPanel.fastColoredTextBox1.Focus();
+            return newDocument;
         }
 
         public void AnalayzeFileForTypes(FileClass fileClass)

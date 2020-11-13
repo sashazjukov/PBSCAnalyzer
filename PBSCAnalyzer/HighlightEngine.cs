@@ -43,16 +43,16 @@ namespace PBSCAnalyzer
             string SpecialWords = @"(?<range>\b(readonly|ref|public|Private|protected|function|subroutine|global|within|from|type)\b|\btype\b( variables)?|[\r\n]event|[\r\n]end (event|subroutine|function|type|variables))";
             range.SetStyle(SourceFileStylesClass.PbSpecialSourceKeywordsStyle, SpecialWords, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-            string PbKeyWords = @"\b(on|call|super|HALT|CLOSE|parent|FETCH|OPEN|DECLARE|post|create|Destroy|AND|IF|ELSEIF|END|END IF|ELSE|THEN|FOR|NEXT|TO|choose|case|DO|UNTIL|LOOP|this|not|null|INTO|OR|return|while)\b";
+            string PbKeyWords = @"\b(on|call|super|HALT|CLOSE|parent|FETCH|OPEN|DECLARE|post|create|Destroy|AND|IF|ELSEIF|END|END IF|ELSE|THEN|FOR|NEXT|TO|choose|case|DO|UNTIL|LOOP|this|not|null|INTO|OR|return|while|GOTO)\b";
             range.SetStyle(SourceFileStylesClass.PbKeywordsStyle, PbKeyWords, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-            //FunctionCall Highlight
+            //Function Call Highlight
             range.SetStyle(SourceFileStylesClass.FunctionCallStyle, @"(?<range>(?!"+ PbKeyWords+"|"+ pbDataTypes + "|\b(WHERE|SET)\b" + @")\b\w+)\s*?\(", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
-            //Types name highlighting            
+            //Type names highlighting            
             range.SetStyle(SourceFileStylesClass.TypeStyle, @"(type){1}\s(?<range>\w+?)\b\s(from)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             
-            //Event Functions name highlighting          
+            //Event Function names highlighting          
             //range.SetStyle(SourceFileStylesClass.EventFunctionStyle, @"[\r\n](event|function|public|protected|private){1}\s?(" + pbDataTypes + @"\s+)?(?<range>\w+?)\b", RegexOptions.IgnoreCase);
 
             range.SetStyle(SourceFileStylesClass.SqlCoulmnsBrown, @"(?<=\.object\.)(?<range>\w+)", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);

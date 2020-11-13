@@ -54,8 +54,11 @@
     <ApplicationIcon>3d bar chart.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FastColoredTextBox">
-      <HintPath>..\packages\FCTB.2.16.11.0\lib\FastColoredTextBox.dll</HintPath>
+    <Reference Include="FastColoredTextBox, Version=2.16.24.0, Culture=neutral, PublicKeyToken=fb8aa12b994ef61b, processorArchitecture=MSIL">
+      <HintPath>..\packages\FCTB.2.16.24\lib\FastColoredTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="PoorMansTSqlFormatterLib35">
+      <HintPath>.\PoorMansTSqlFormatterLib35.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -85,6 +88,7 @@
     <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DatagridUtils.cs" />
     <Compile Include="Forms\DebugDWContainer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -110,6 +114,12 @@
       <DependentUpon>OpenedDocumentsPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\Prompt.cs" />
+    <Compile Include="Forms\SqlResultPanel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SqlResultPanel.Designer.cs">
+      <DependentUpon>SqlResultPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="UserCommand.cs" />
     <Compile Include="HighlightEngine.cs" />
     <Compile Include="Forms\InputMessageForm.cs">
@@ -168,6 +178,7 @@
       <DependentUpon>SourceEditorPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="SourceFileStylesClass.cs" />
+    <Compile Include="UserTextSnippet.cs" />
     <Compile Include="WorkSpaceItem.cs" />
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
@@ -197,6 +208,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SqlResultPanel.resx">
+      <DependentUpon>SqlResultPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\WaitForm.resx">
       <DependentUpon>WaitForm.cs</DependentUpon>

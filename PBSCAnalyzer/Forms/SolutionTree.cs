@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -158,6 +159,28 @@ namespace PBSCAnalyzer
         private void toolStripButton4_Click(object sender, EventArgs e)
         {
             treeView1.CollapseAll();
+        }
+
+        private void tsb_export_search_result_Click(object sender, EventArgs e)
+        {
+            var newNote =  MainEngine.Instance.OpenNewNote(true);
+            var reslt = new StringBuilder();
+            FillNotePanelFromTree( treeView1.SelectedNode.Nodes, reslt);
+            newNote.SourceEditorPanel.fastColoredTextBox1.Text = reslt.ToString();
+        }
+
+        private void FillNotePanelFromTree(TreeNodeCollection treeView1Nodes, StringBuilder reslt)
+        {
+            foreach (TreeNode treeView1Node in treeView1Nodes)
+            {
+                string outline = new String(' ', treeView1Node.Level);
+                string txt = outline  + treeView1Node.Text;
+                reslt.AppendLine(txt);
+                if (treeView1Node.Nodes.Count != 0)
+                {
+                    FillNotePanelFromTree(treeView1Node.Nodes, reslt);
+                }
+            }
         }
     }
 }

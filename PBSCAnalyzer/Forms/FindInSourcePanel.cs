@@ -91,7 +91,7 @@ namespace PBSCAnalyzer
                 string text = SourceEditorPanel.fastColoredTextBox1.Text;
                 MatchCollection matchCollection = Regex.Matches(text,_searchedText,RegexOptions.ExplicitCapture,TimeSpan.FromSeconds(5));
                 reslt.Append(_searchedText + "\r\n");
-                    reslt.Append("Total groups: "+matchCollection.Count+"\r\n");
+                reslt.Append("Total groups: "+matchCollection.Count+"\r\n");
                 foreach (Match item in matchCollection)
                 {
                     if (item.Success)
@@ -101,12 +101,12 @@ namespace PBSCAnalyzer
                         {
                             resGroup.Add(group);
                         }
-                        foreach (Group group in resGroup.OrderBy(x=>x.Index))
-                        {
-                            string format = $"{@group.Index} - {@group.Value}\r\n";
+                        foreach (Group group in resGroup.OrderBy(x=>x.Index).Skip(1))
+                        {                                                            
+                            string format = $"{@group.Value}\r\n";
                             reslt.Append(format);
                         }
-                        reslt.Append("------------------------------------------------------------------------" + "\r\n");
+                        //reslt.Append("------------------------------------------------------------------------" + "\r\n");
                     }
                 }
                 SearchResult_fctb.Text = reslt.ToString();

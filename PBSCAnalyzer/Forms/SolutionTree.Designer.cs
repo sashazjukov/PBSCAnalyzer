@@ -48,6 +48,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.FindProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.FindInSolutionTextBox = new System.Windows.Forms.ComboBox();
+            this.tsb_export_search_result = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -122,7 +123,8 @@
             this.OpenedFiles_toolStripButton,
             this.toolStripSeparator1,
             this.toolStripButton3,
-            this.toolStripButton4});
+            this.toolStripButton4,
+            this.tsb_export_search_result});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(234, 25);
@@ -230,6 +232,16 @@
             this.FindInSolutionTextBox.TextChanged += new System.EventHandler(this.FindInSolutionTextBox_TextChanged);
             this.FindInSolutionTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FindInSolutionTextBox_KeyUp);
             // 
+            // tsb_export_search_result
+            // 
+            this.tsb_export_search_result.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsb_export_search_result.Image = ((System.Drawing.Image)(resources.GetObject("tsb_export_search_result.Image")));
+            this.tsb_export_search_result.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsb_export_search_result.Name = "tsb_export_search_result";
+            this.tsb_export_search_result.Size = new System.Drawing.Size(23, 22);
+            this.tsb_export_search_result.Text = "Export Search Result";
+            this.tsb_export_search_result.Click += new System.EventHandler(this.tsb_export_search_result_Click);
+            // 
             // SolutionTree
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,5 +279,6 @@
         private System.Windows.Forms.ToolStripButton toolStripButton3;
         private System.Windows.Forms.ToolStripButton toolStripButton4;
         private System.Windows.Forms.ComboBox FindInSolutionTextBox;
+        private System.Windows.Forms.ToolStripButton tsb_export_search_result;
     }
 }

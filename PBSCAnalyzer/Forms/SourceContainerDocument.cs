@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastColoredTextBoxNS;
+using PBSCAnalyzer.Forms;
 using PBSCAnalyzer.types;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -16,6 +17,7 @@ namespace PBSCAnalyzer
         private readonly ObjectExplorerPanel _objectExplorerPanel;
         public SourceEditorPanel SourceEditorPanel;
         private SourceEditorPanel _sqlPanel;
+        private SqlResultPanel _sqlResultPanel;
 
         public SourceContainerDocument()
         {
@@ -25,15 +27,18 @@ namespace PBSCAnalyzer
             SourceEditorPanel = new SourceEditorPanel();
             _findInSourcePanel = new FindInSourcePanel();
             _objectExplorerPanel = new ObjectExplorerPanel();
+            _sqlResultPanel = new SqlResultPanel();
 
             _findInSourcePanel.SourceEditorPanel = SourceEditorPanel;
             SourceEditorPanel.FindInSourcePanel = _findInSourcePanel;
             SourceEditorPanel.SourceContainerDocument = this;
             SourceEditorPanel.MainSourceHolder = true;
             _objectExplorerPanel.SourceContainerDocument = this;
+            _sqlResultPanel.SourceContainerDocument = this;
 
             SourceEditorPanel.Show(dockPanel1);
             _findInSourcePanel.Show(dockPanel1, DockState.DockBottomAutoHide);
+            _sqlResultPanel.Show(dockPanel1, DockState.DockBottomAutoHide);
             _objectExplorerPanel.Show(dockPanel1, DockState.DockRight);
         }
 
@@ -230,21 +235,39 @@ namespace PBSCAnalyzer
         {
             if (SqlPanel != null)
             {
-                string result = SqlPanel.fastColoredTextBox1.Text;
-                List<FilePositionItem> list = _objectExplorerPanel.GetFilePositionItems();
-                var filePositionItems = list.Where(x=>x.ItemType == "sqlArgument").ToList();
-                filePositionItems.ForEach((item) =>
-                {
-                    string argValue = (item.NameType == "number" ? item.ArgumentValue : "'"+item.ArgumentValue+"'");
-                    if (item.ArgumentValue == "null") {
-                        argValue = "null";
-                    }
-                
-                    argValue += "/*:" + item.Name + "*/";
-                    result = Regex.Replace(result,":" + item.Name, argValue,RegexOptions.IgnoreCase);                
-                });
+                var result = GetProcessedSqlText(SqlPanel.fastColoredTextBox1.Text);
                 Clipboard.SetText(result);
             }
+        }
+
+        public string GetProcessedSqlText(string result)
+        {           
+            List<FilePositionItem> list = _objectExplorerPanel.GetFilePositionItems();
+            var filePositionItems = list.Where(x => x.ItemType == "sqlArgument").ToList();
+            filePositionItems.ForEach((item) =>
+            {
+                string argValue = (item.NameType == "number" ? item.ArgumentValue : "'" + item.ArgumentValue + "'");
+                if (item.ArgumentValue == "null")
+                {
+                    argValue = "null";
+                }
+
+                argValue += "/*:" + item.Name + "*/";
+                result = Regex.Replace(result, ":" + item.Name, argValue, RegexOptions.IgnoreCase);
+            });
+            return result;
+        }
+
+        public void ExecuteSql()
+        {
+            MyDockHelper.MakePanelVisible(_sqlResultPanel);
+            string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;
+            _sqlResultPanel.ExecuteSql(GetProcessedSqlText(text));
+        }
+
+        public void ExecuteSqlSelection()
+        {
+            ExecuteSql();
         }
     }
 }

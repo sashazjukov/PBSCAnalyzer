@@ -76,7 +76,7 @@ namespace PBSCAnalyzer
                             typeNode.Nodes.Add(dataObjNode);
 
                             string textInstanceRange = fileClass.Text.Substring(powerBuilderFileType.IndexStart, powerBuilderFileType.IndexInstanceVarEnd - powerBuilderFileType.IndexStart);
-                            Match match = Regex.Match(textInstanceRange, @"string\s*dataobject\s*\=\s*\""(?<dataobj>\w+)""", RegexOptions.ExplicitCapture);
+                            Match match = Regex.Match(textInstanceRange, @"string\s*dataobject\s*\=\s*\""(?<dataobj>\w+)""", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                             if (match.Success)
                             {
                                 string dataObjectSource = match.Groups["dataobj"].Value;
@@ -102,9 +102,9 @@ namespace PBSCAnalyzer
                             length = length > 0 ? length : fileClass.Text.Length - powerBuilderFileType.IndexStart;
                             textInstanceRange = fileClass.Text.Substring(powerBuilderFileType.IndexStart, length);
                                                         
-                            MatchCollection matchesCollection = Regex.Matches(textInstanceRange, @"[\r\n](\s*)(this\.)?dataobject\s*\=\s*(\""|\')(?<dataobj>\w+)(\""|\')", RegexOptions.ExplicitCapture);
-                            MatchCollection matchesCollection2 = Regex.Matches(fileClass.Text, @"[\r\n](\s*)" + powerBuilderFileType.Name + @"\.dataobject\s*\=\s*(\""|\')(?<dataobj>\w+)(\""|\')", RegexOptions.ExplicitCapture);
-                            Action<MatchCollection,int> action = (MatchCollection matches, int indexOffset) =>
+                            MatchCollection matchesCollection = Regex.Matches(textInstanceRange, @"[\r\n](\s*)(this\.)?dataobject\s*\=\s*?(?<dataobj>(.)+)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+                            MatchCollection matchesCollection2 = Regex.Matches(fileClass.Text, @"[\r\n](\s*)" + powerBuilderFileType.Name + @"\.dataobject\s*\=\s*?(?<dataobj>(.)+)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+                            Action <MatchCollection,int> action = (MatchCollection matches, int indexOffset) =>
                                             {
 
                                                 foreach (Match m in matches)
@@ -169,7 +169,7 @@ namespace PBSCAnalyzer
         private FilePositionItem GetVarValueFromType(PowerBuilderFileType powerBuilderFileType, string text, FileClass fileClass, string varRegex)
         {
             string textInstanceRange = fileClass.Text.Substring(powerBuilderFileType.IndexStart, powerBuilderFileType.IndexInstanceVarEnd - powerBuilderFileType.IndexStart);
-            Match match = Regex.Match(textInstanceRange, varRegex, RegexOptions.ExplicitCapture);
+            Match match = Regex.Match(textInstanceRange, varRegex, RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
             if (match.Success)
             {
                 string dataObjectSource = match.Groups["dataobj"].Value;
@@ -185,7 +185,7 @@ namespace PBSCAnalyzer
 
         private void AddNodeByRegex(FileClass fileClass, string nodeName, string regex, string format, int imageIndex, string itemType)
         {
-            MatchCollection matchCollection = Regex.Matches(fileClass.Text, regex, RegexOptions.ExplicitCapture);
+            MatchCollection matchCollection = Regex.Matches(fileClass.Text, regex, RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
             var typeNode = new TreeNode();
             typeNode.Expand();
             typeNode.Text = string.Format(nodeName, matchCollection.Count);
@@ -212,7 +212,7 @@ namespace PBSCAnalyzer
                 filePositionItem.LineNumberEnd = MainEngine.Instance.GetTextLineByCharIndex(filePositionItem.IndexItemEnd);
                 node.Tag = filePositionItem;
                 // child nodes for Calcualted expressions
-                MatchCollection matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<prop>\w+)\=\""(?<val>[^\""]*)\~t(?<expr>.*?)\""", RegexOptions.ExplicitCapture);
+                MatchCollection matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<prop>\w+)\=\""(?<val>[^\""]*)\~t(?<expr>.*?)\""", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                 foreach (Match m in matchExpresionCollection)
                 {
                     var nodeExpr = new TreeNode();
@@ -225,7 +225,7 @@ namespace PBSCAnalyzer
                     node.Nodes.Add(nodeExpr);
                 }
                 // Child nodes for dropdown date windows
-                matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<dddwname>dddw\.(name|datacolumn|displaycolumn))\=(?<val>\w+)\s", RegexOptions.ExplicitCapture);
+                matchExpresionCollection = Regex.Matches(match.Groups[0].Value, @"(?<dddwname>dddw\.(name|datacolumn|displaycolumn))\=(?<val>\w+)\s", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                 foreach (Match m in matchExpresionCollection)
                 {
                     var nodeExpr = new TreeNode();

@@ -142,7 +142,7 @@ namespace PBSCAnalyzer.Forms
                 DataTable dt = table;
                 if (!isFromHistory)
                 {
-                    dt = TransposeDataTable(table);
+                    dt = DatagridUtils.TransposeDataTable(table);
                 }
                 DataGridView dgrv = null; ;
                 if (ff.Count > icontrolIndex)
@@ -164,7 +164,7 @@ namespace PBSCAnalyzer.Forms
                 }
                 dataTAbleLogManager.HighlightChangesInLadsTable(dgrv, isFromHistory);
 
-                DatagridUtils.FormatDataGridView(tables.Count, dgrv);
+                DatagridUtils.FormatDataGridView( dgrv);
             }
             if (!isFromHistory)
             {
@@ -226,56 +226,7 @@ namespace PBSCAnalyzer.Forms
         /// </summary>
         /// <param name="dt">Original DataTable to transpose</param>
         /// <returns>A transposed DataTable</returns>
-        public DataTable TransposeDataTable(DataTable dt)
-        {
-            DataTable transposedTable = new DataTable();
-            
-            DataColumn firstColumn = new DataColumn("Column Name");
-            transposedTable.Columns.Add(firstColumn);
-
-            //Add a column for each row in first data table
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                DataColumn dc = new DataColumn(i.ToString());//dt.Rows[i][0].ToString()
-                transposedTable.Columns.Add(dc);
-            }
-            
-            for (int j = 0; j < dt.Columns.Count; j++)
-            {
-                DataRow dr = transposedTable.NewRow();
-                dr[0] = dt.Columns[j].ColumnName;
-
-                for (int k = 0; k < dt.Rows.Count; k++)
-                {
-                    dr[k + 1] = dt.Rows[k][j];
-                }
-
-                transposedTable.Rows.Add(dr);
-            }
-            DataView defaultView = transposedTable.DefaultView;
-            defaultView.Sort = "Column Name";
-            transposedTable = defaultView.ToTable();
-            return transposedTable;
-        }
-    }
-
-    public static class DatagridUtils {
-        public static void FormatDataGridView(int countTables, DataGridView dgrv)
-        {            
-            for (int i = 0; i < dgrv.Columns.Count - 1; i++)
-            {
-                dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-                
-            }
-            dgrv.Columns[dgrv.Columns.Count - 1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
-            for (int i = 0; i < dgrv.Columns.Count; i++)
-            {
-                int colw = Math.Min(dgrv.Columns[i].Width,200);
-                dgrv.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-                dgrv.Columns[i].Width = colw;                
-            }
-        }
+        
     }
 
     internal class DataTablesLogManager
@@ -381,7 +332,7 @@ namespace PBSCAnalyzer.Forms
                 }
                 else {
                     dgrv.DataSource = lastTable;
-                    DatagridUtils.FormatDataGridView(lastInLog.dataTables.Count, dgrv);
+                    DatagridUtils.FormatDataGridView( dgrv);
                     wasHighlighted = true;
                 }
 

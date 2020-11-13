@@ -7,6 +7,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using PBSCAnalyzer;
 using PBSCAnalyzer.Forms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -24,10 +25,11 @@ namespace PBSCAnalyzer
         {
             InitializeComponent();
             var a = App.Configuration.WorkSpaces;
+            
             this.Closing+=OnClosing;
             
             TopLevel = true;
-            this.Text = "PBSC Analyzer";            
+            this.Text = "PBSC Analyzer" + " v." + Application.ProductVersion; ;            
             _solutionTree = new SolutionTree();
             _openedDocumentsPanel = new OpenedDocumentsPanel();
             _solutionTree.Show(MainDockPanel, DockState.DockLeft);
@@ -97,6 +99,7 @@ namespace PBSCAnalyzer
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            
         }
         
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -198,28 +201,21 @@ namespace PBSCAnalyzer
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-             AboutBox aboutBox = new AboutBox();
+            AboutBox aboutBox = new AboutBox();
             aboutBox.ShowDialog();
         }
 
-        private void toolStripButton1_Click_1(object sender, EventArgs e)
+        private void tsb_createDebugDwXml_Click_1(object sender, EventArgs e)
         {
             string datawindowName = Clipboard.GetText();
             if (string.IsNullOrEmpty(datawindowName))
             {
                 MessageBox.Show("Clipboard is empty!", "Error!");
                 return;
-            }
-            //            if (Regex.Match(datawindowName, @"^\b[a-zA-Z0-9_]+\b$").Success == false)
-            //            {
-            //                MessageBox.Show("Should be one word!","Error!");
-            //                return;
-            //            }
-            string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xml";
+            }          
+            string pathToDw = @"%APPDATA%\PBSCAnalyzer\Debug\" + datawindowName + ".xml";
             string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", xml!, true)";
-
-            //string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xls";
-            //string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", Excel!, true)";
+           
             string result = dwTemplate;
             Clipboard.SetText(result);
             ShowDebugDWPanel(pathToDw);
@@ -257,21 +253,26 @@ namespace PBSCAnalyzer
             {
                 MessageBox.Show("Clipboard is empty!", "Error!");
                 return;
-            }
-            //            if (Regex.Match(datawindowName, @"^\b[a-zA-Z0-9_]+\b$").Success == false)
-            //            {
-            //                MessageBox.Show("Should be one word!","Error!");
-            //                return;
-            //            }
-            //string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xml";
-            //string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", xml!, true)";
+            }            
 
-            string pathToDw = @"c:\development\AZU\debubpb\" + datawindowName + ".xls";
+            string pathToDw = @"%APPDATA%\PBSCAnalyzer\Debug\" + datawindowName + ".xls";
             string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", Excel!, true)";
             string result = dwTemplate;
             Clipboard.SetText(result);
             //ShowDebugDWPanel(pathToDw);
             MessageBox.Show("" + result, "-= Success! =-");
+        }
+
+        private void tsb_ReadRegistryDbConfig_Click(object sender, EventArgs e)
+        {
+            string Servername = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "Servername", null);
+            string Database = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "Database", null);
+            string LogId = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "LogId", null);
+            string LogPass = (string)Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "LogPass", null);
+            if (Servername != null)
+            {
+                string connectionString = $@"Server={Servername};Database={Database};User Id={LogId};Password={LogPass}";
+            }
         }
     }
 }

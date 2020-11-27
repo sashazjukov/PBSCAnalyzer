@@ -27,19 +27,22 @@ namespace PBSCAnalyzer
             var a = App.Configuration.WorkSpaces;
             
             this.Closing+=OnClosing;
+            this.FormClosing += Form1_FormClosing;
             
-            TopLevel = true;
-            this.Text = "PBSC Analyzer" + " v." + Application.ProductVersion; ;            
+            TopLevel = true;            
             _solutionTree = new SolutionTree();
-            _openedDocumentsPanel = new OpenedDocumentsPanel();
             _solutionTree.Show(MainDockPanel, DockState.DockLeft);
             _solutionTree.treeView1.NodeMouseClick += treeView1_NodeMouseClick;
-            _openedDocumentsPanel.treeView1.NodeMouseClick += treeView1_NodeMouseClick;
 
             _workspaceListPanel = new WorkspaceListPanel();
+
+            _openedDocumentsPanel = new OpenedDocumentsPanel();
+            _openedDocumentsPanel.treeView1.NodeMouseClick += treeView1_NodeMouseClick;
+
             //_workspaceListPanel.Show(_solutionTree.FloatPane, DockAlignment.Bottom,20);
             _workspaceListPanel.Show(MainDockPanel, DockState.DockLeftAutoHide);
             _openedDocumentsPanel.Show(MainDockPanel, DockState.DockLeftAutoHide);
+
             _workspaceListPanel.SetWorkspaceList();
 
             MainEngine.Instance.SolutionTree = _solutionTree;
@@ -49,11 +52,30 @@ namespace PBSCAnalyzer
             MainEngine.Instance.LoadWorkSpace(App.Configuration.CurrentWorkSpaceName);
         }
 
+        public string DebugginPath
+        {
+            get
+            {
+                if (!Directory.Exists(_path))
+                {
+                    Directory.CreateDirectory(_path);
+                }
+
+                return _path;
+            }
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            MainEngine.Instance.CloseInBatch = true;
+            MainEngine.Instance.SaveWorkSpace();                        
+        }
+
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            MainEngine.Instance.CloseInBatch = true;            
-            MainEngine.Instance.SaveWorkSpace();
-            cancelEventArgs.Cancel = false;            
+            //MainEngine.Instance.CloseInBatch = true;
+            //MainEngine.Instance.SaveWorkSpace();
+            //cancelEventArgs.Cancel = false;
         }
 
         private void selectPBWToolStripMenuItem_Click(object sender, EventArgs e)
@@ -99,7 +121,7 @@ namespace PBSCAnalyzer
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
+            MyDockHelper.MakePanelVisible(MainEngine.Instance.OpenedDocumentsPanel);
         }
         
         private void toolStripButton3_Click(object sender, EventArgs e)
@@ -125,7 +147,7 @@ namespace PBSCAnalyzer
 
         private void clearSourcesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(this, "Remove all source pathes?", "Are You Sure?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(this, "Remove all source folders?", "Remove Source Folder?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 MainEngine.Instance.RemoveSourcePathes();
             }
@@ -212,8 +234,8 @@ namespace PBSCAnalyzer
             {
                 MessageBox.Show("Clipboard is empty!", "Error!");
                 return;
-            }          
-            string pathToDw = @"%APPDATA%\PBSCAnalyzer\Debug\" + datawindowName + ".xml";
+            }
+            string pathToDw = DebugginPath + datawindowName + ".xml";
             string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", xml!, true)";
            
             string result = dwTemplate;
@@ -224,6 +246,8 @@ namespace PBSCAnalyzer
 
         private DebugDWPanel _panel;
         private DebugDWContainer debugContainer;
+        private string _path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\PBSCAnalyzer\Debug\";
+
         private void ShowDebugDWPanel(string file)
         {
             if (debugContainer == null)
@@ -255,7 +279,7 @@ namespace PBSCAnalyzer
                 return;
             }            
 
-            string pathToDw = @"%APPDATA%\PBSCAnalyzer\Debug\" + datawindowName + ".xls";
+            string pathToDw = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), @"PBSCAnalyzer\Debug\" + datawindowName + ".xls");
             string dwTemplate = datawindowName + ".saveas(\"" + pathToDw + "\", Excel!, true)";
             string result = dwTemplate;
             Clipboard.SetText(result);
@@ -272,6 +296,26 @@ namespace PBSCAnalyzer
             if (Servername != null)
             {
                 string connectionString = $@"Server={Servername};Database={Database};User Id={LogId};Password={LogPass}";
+            }
+        }
+
+        private void removeSourceFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string selectedNodeText = "";
+            var selectedNode =  MainEngine.Instance.SolutionTree.treeView1.SelectedNode;
+            if (selectedNode != null && selectedNode.Level == 0)
+            {
+                selectedNodeText = selectedNode.Text;
+                
+                if (MessageBox.Show(this, $@"Remove source Folder [{selectedNodeText}]?", "Remove Source Folder", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    MainEngine.Instance.RemoveSelectedSourcePath();
+                    MainEngine.Instance.SaveWorkSpace();
+                }
+            }
+            else
+            {
+                MessageBox.Show(this, "Please select root folder in the Solution Tree.", "Remove Source Folder", MessageBoxButtons.OK);
             }
         }
     }

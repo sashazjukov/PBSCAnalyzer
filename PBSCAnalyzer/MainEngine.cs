@@ -212,12 +212,12 @@ namespace PBSCAnalyzer
             }
             else
             { if (eSearchIn == ESearchIn.FileName) { SetSolutionTreeStatusText($"{_totalFiind} file names match '{text}'"); } }
-            { if (eSearchIn == ESearchIn.FileText) { SetSolutionTreeStatusText($"{_totalFiind} files containing '{text}'"); } }
-            treeView.EndUpdate();
+            { if (eSearchIn == ESearchIn.FileText) { SetSolutionTreeStatusText($"{_totalFiind} files containing '{text}'"); } }            
             if (treeView.Nodes.Count > 0)
             {
                 treeView.SelectedNode = treeView.Nodes[0];
             }
+            treeView.EndUpdate();
         }
 
         private void ProcessFindInNodes(TreeNode folderNode, TreeNodeCollection treeNodeCollection, ESearchIn eSearchIn, string lower, string text, SearchInFileCriteria searchInFileCriteria, List<TreeNode> toRemoveParentFolder)
@@ -329,7 +329,9 @@ namespace PBSCAnalyzer
             parentNode.ToolTipText = selectedPath;            
             parentNode.ImageIndex = 0;            
             parentNode.SelectedImageIndex = 0;
-            parentNode.BackColor = Color.FromArgb(194, 235, 235, 255);                  
+            parentNode.BackColor = Color.FromArgb(194, 235, 235, 255);
+            parentNode.Tag = selectedPath;
+
             GeneralTreeNodeCollection.Add(parentNode);
             AddFolderItems(parentNode,selectedPath);
             SetSolutionTree(GeneralTreeNodeCollection);
@@ -341,42 +343,45 @@ namespace PBSCAnalyzer
 
             foreach (string directory in directories)
             {
-                var diretoryNode = new TreeNode();
-                diretoryNode.BackColor = Color.FromArgb(163, 254, 252, 225);
                 var match = Regex.Match(directory, @"([^\\]+$)");
-                diretoryNode.Text = match.Value;
-                diretoryNode.ToolTipText = directory;
-                diretoryNode.ImageIndex = 2;
-                diretoryNode.SelectedImageIndex = 2;
-                parentNode.Nodes.Add(diretoryNode);
-                AddFolderItems(diretoryNode, directory);
-                
-                var files = Directory.GetFiles(directory, "*.sr*").ToList();
-                files.AddRange(Directory.GetFiles(directory, "*.sql"));
 
-                foreach (string file in files)
-                {
-                    var fileNode = new TreeNode();
-                    fileNode.Text = Path.GetFileNameWithoutExtension(file);
-                    string extension = Path.GetExtension(file);
-                    if (extension == ".srd") { fileNode.ImageIndex = 1; }
-                    else if (extension == ".srw") { fileNode.ImageIndex = 4; }
-                    else if (extension == ".sru") { fileNode.ImageIndex = 5; }
-                    else if (extension == ".srm") { fileNode.ImageIndex = 10; }
-                    else if (extension == ".srs") { fileNode.ImageIndex = 11; }
-                    else { fileNode.ImageIndex = 6; }
-                    fileNode.SelectedImageIndex = fileNode.ImageIndex;
-                    fileNode.ForeColor = Color.Black;
-                    fileNode.ToolTipText = file;
-                    
-                    var fileClass = new FileClass();
-                    fileClass.Name = fileNode.Text;
-                    fileClass.FilePath = file;
-                    fileClass.FileName = fileNode.Text;
-                    fileNode.Tag = fileClass;
-                    diretoryNode.Nodes.Add(fileNode);
-                }                
+                var directoryNode = new TreeNode();
+                directoryNode.BackColor = Color.FromArgb(163, 254, 252, 225);
+                directoryNode.Text = match.Value;
+                directoryNode.ToolTipText = directory;
+                directoryNode.ImageIndex = 2;
+                directoryNode.SelectedImageIndex = 2;
+
+                parentNode.Nodes.Add(directoryNode);
+
+                AddFolderItems(directoryNode, directory);
             }
+
+            var files = Directory.GetFiles(selectedPath, "*.sr*").ToList();
+            files.AddRange(Directory.GetFiles(selectedPath, "*.sql"));
+
+            foreach (string file in files)
+             {
+                var fileNode = new TreeNode();
+                fileNode.Text = Path.GetFileNameWithoutExtension(file);
+                string extension = Path.GetExtension(file);
+                if (extension == ".srd") { fileNode.ImageIndex = 1; }
+                else if (extension == ".srw") { fileNode.ImageIndex = 4; }
+                else if (extension == ".sru") { fileNode.ImageIndex = 5; }
+                else if (extension == ".srm") { fileNode.ImageIndex = 10; }
+                else if (extension == ".srs") { fileNode.ImageIndex = 11; }
+                else { fileNode.ImageIndex = 6; }
+                fileNode.SelectedImageIndex = fileNode.ImageIndex;
+                fileNode.ForeColor = Color.Black;
+                fileNode.ToolTipText = file;
+                    
+                var fileClass = new FileClass();
+                fileClass.Name = fileNode.Text;
+                fileClass.FilePath = file;
+                fileClass.FileName = fileNode.Text;
+                fileNode.Tag = fileClass;
+                parentNode.Nodes.Add(fileNode);
+             }                           
         }
 
 //        public void LoadSourceFolder(string selectedPath)
@@ -431,8 +436,8 @@ namespace PBSCAnalyzer
 
         public void SetSolutionTree(IEnumerable<TreeNode> generalTreeNodeCollection)
         {
-            SolutionTree.treeView1.Nodes.Clear();
             SolutionTree.treeView1.BeginUpdate();
+            SolutionTree.treeView1.Nodes.Clear();
             foreach (TreeNode treeNode in generalTreeNodeCollection) { SolutionTree.treeView1.Nodes.Add(treeNode); }
             foreach (TreeNode node in SolutionTree.treeView1.Nodes) { node.Expand(); }
             SolutionTree.treeView1.EndUpdate();
@@ -463,6 +468,7 @@ namespace PBSCAnalyzer
 //            }
 //        }
 
+         private int _noteCount = 0;
         public SourceContainerDocument OpenNewNote(bool isSql)
         {
             SourceContainerDocument newDocument;
@@ -471,7 +477,7 @@ namespace PBSCAnalyzer
                                       FileName = "SQL Note",
                                       FilePath = "Notes",
                                       TextState = ETextState.ReadNotChanged,                                      
-                                      Name = "note",
+                                      Name = $"Note [{++_noteCount}]",
                                       IsSql = isSql
             };
             newDocument = CreateNewDocument(fileClass); 
@@ -680,7 +686,7 @@ namespace PBSCAnalyzer
 
         public void SetMainFormCaption()
         {
-            MainForm.Text = $"PBSC Analyzer [{App.Configuration.CurrentWorkSpaceName}]";
+            MainForm.Text = $@"PBSC Analyzer, v.{Application.ProductVersion}, [{App.Configuration.CurrentWorkSpaceName}]";
         }
 
         private void ShowWaitPanel(bool b)
@@ -837,6 +843,19 @@ namespace PBSCAnalyzer
                     T content = (T)dockContent;
                     action.Invoke(content);
                 }
+            }
+        }
+
+        public void RemoveSelectedSourcePath()
+        {            
+            if (SolutionTree.treeView1.SelectedNode != null)
+            {
+                var workSpaceItem = GetWorkspace(App.Configuration.CurrentWorkSpaceName);
+
+                workSpaceItem.SourceFloders.Remove((string) SolutionTree.treeView1.SelectedNode.Tag);
+
+                GeneralTreeNodeCollection.Remove(SolutionTree.treeView1.SelectedNode);
+                SolutionTree.treeView1.Nodes.Remove(SolutionTree.treeView1.SelectedNode);
             }
         }
     }

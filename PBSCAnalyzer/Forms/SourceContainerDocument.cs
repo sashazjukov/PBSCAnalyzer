@@ -22,7 +22,8 @@ namespace PBSCAnalyzer
         public SourceContainerDocument()
         {
             InitializeComponent();
-            this.Closing+=OnClosing;
+            //this.Closing+=OnClosing;            
+            this.FormClosing += SourceContainerDocument_FormClosing; ;            
             TopLevel = true;
             SourceEditorPanel = new SourceEditorPanel();
             _findInSourcePanel = new FindInSourcePanel();
@@ -42,10 +43,28 @@ namespace PBSCAnalyzer
             _objectExplorerPanel.Show(dockPanel1, DockState.DockRight);
         }
 
+        private void SourceContainerDocument_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            SourceEditorPanel.FileClass.IsOpened = false;
+            SourceEditorPanel.FileClass.TextState = ETextState.UnRead;
+
+            if (e.CloseReason != CloseReason.UserClosing) return;
+            if (MainEngine.Instance.CloseInBatch == false)
+            {
+                MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                if (App.Configuration.SaveOnCloseOpenDocument)
+                {
+                    MainEngine.Instance.SaveWorkSpace();
+                }
+            }
+            
+        }
+
         private void OnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
             SourceEditorPanel.FileClass.IsOpened = false;
             SourceEditorPanel.FileClass.TextState = ETextState.UnRead;
+            
             if (MainEngine.Instance.CloseInBatch == false)
             {                
                 MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
@@ -165,6 +184,10 @@ namespace PBSCAnalyzer
             ToolTipText = fileClass.FilePath;
             SourceEditorPanel.SetSourceFileClass(FileClass);
             SourceEditorPanel.fastColoredTextBox1.Text = fileClass.Text;
+            if (fileClass.IsSql)
+            {
+                SqlPanel = this.SourceEditorPanel;
+            }
             //AnalyzeSource();
         }
 
@@ -225,6 +248,7 @@ namespace PBSCAnalyzer
 
         public List<SourceEditorPanel> EditFunctionPaels = new List<SourceEditorPanel>();
         private SourceEditorPanel _analyzerPanel;
+        private string _last_ProcessedSqlText;
 
         public void ReloadDocumentContent()
         {
@@ -258,16 +282,23 @@ namespace PBSCAnalyzer
             return result;
         }
 
-        public void ExecuteSql()
+        public void ExecuteSql(bool useLastSql = false)
         {
             MyDockHelper.MakePanelVisible(_sqlResultPanel);
-            string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;
-            _sqlResultPanel.ExecuteSql(GetProcessedSqlText(text));
+            if (SqlPanel != null)
+            {
+                if (!useLastSql || String.IsNullOrEmpty(_last_ProcessedSqlText))
+                {
+                    string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;                
+                    _last_ProcessedSqlText = GetProcessedSqlText(text);
+                }
+                _sqlResultPanel.ExecuteSql(_last_ProcessedSqlText);
+            }
         }
 
         public void ExecuteSqlSelection()
         {
-            ExecuteSql();
+            ExecuteSql(false);
         }
     }
 }

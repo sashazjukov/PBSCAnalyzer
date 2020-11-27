@@ -351,7 +351,7 @@ namespace PBSCAnalyzer
             SourceContainerDocument.CopySql();
         }
 
-        private void toolStripButton5_Click(object sender, EventArgs e)
+        public void tsb_ExecuteSql_Click(object sender, EventArgs e)
         {
             SourceContainerDocument.ExecuteSql();
         }

@@ -18,6 +18,15 @@ namespace PBSCAnalyzer.Forms
         public SqlResultPanel()
         {
             InitializeComponent();
+            this.Shown += SqlResultPanel_Shown;
+        }
+
+        private void SqlResultPanel_Shown(object sender, EventArgs e)
+        {
+            if (String.IsNullOrEmpty(tb_connectionString.Text))
+            {
+                tsb_ReadConFromReg_Click(this,null);
+            }            
         }
 
         public SourceContainerDocument SourceContainerDocument { get; set; }
@@ -83,9 +92,9 @@ namespace PBSCAnalyzer.Forms
 
         private void tsb_ReadConFromReg_Click(object sender, EventArgs e)
         {
+            tb_connectionString.Text = @"Server={Servername};Database={Database};User Id={LogId};Password={LogPass}";
             try
             {
-
                 string Servername = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "Servername", null);
                 string Database = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "Database", null);
                 string LogId = (string) Registry.GetValue(@"HKEY_CURRENT_USER\Software\patrix\patricia\connection", "LogId", null);
@@ -99,6 +108,16 @@ namespace PBSCAnalyzer.Forms
             {
                 MessageBox.Show(ex.Message, "SQL Result Panel");
             }
+        }
+
+        private void tb_connectionString_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tsb_transpone_Click(object sender, EventArgs e)
+        {
+            this.SourceContainerDocument.SourceEditorPanel.SourceContainerDocument.ExecuteSql(true);
         }
     }
 }

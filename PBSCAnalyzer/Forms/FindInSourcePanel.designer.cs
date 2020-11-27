@@ -36,6 +36,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.comboBox1 = new System.Windows.Forms.ComboBox();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SearchResult_fctb)).BeginInit();
             this.tableLayoutPanel2.SuspendLayout();
@@ -50,6 +51,7 @@
             this.tableLayoutPanel1.Controls.Add(this.SearchResult_fctb, 0, 1);
             this.tableLayoutPanel1.Controls.Add(this.tableLayoutPanel2, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.listBox1, 1, 1);
+            this.tableLayoutPanel1.Controls.Add(this.label2, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -79,7 +81,6 @@
             this.SearchResult_fctb.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.SearchResult_fctb.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.SearchResult_fctb.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SearchResult_fctb.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.SearchResult_fctb.IsReplaceMode = false;
             this.SearchResult_fctb.Location = new System.Drawing.Point(3, 33);
             this.SearchResult_fctb.Name = "SearchResult_fctb";
@@ -115,9 +116,9 @@
             this.label1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.label1.Location = new System.Drawing.Point(3, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(44, 24);
+            this.label1.Size = new System.Drawing.Size(66, 24);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Search:";
+            this.label1.Text = "Search (Rx):";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // comboBox1
@@ -126,7 +127,7 @@
             this.comboBox1.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
             this.comboBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(53, 3);
+            this.comboBox1.Location = new System.Drawing.Point(75, 3);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(207, 21);
             this.comboBox1.TabIndex = 1;
@@ -144,6 +145,17 @@
             this.listBox1.TabIndex = 3;
             this.listBox1.Click += new System.EventHandler(this.listBox1_Click);
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.label2.Location = new System.Drawing.Point(272, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(42, 30);
+            this.label2.TabIndex = 4;
+            this.label2.Text = "History:";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // FindInSourcePanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -155,6 +167,7 @@
             this.Name = "FindInSourcePanel";
             this.Text = "Search In File";
             this.tableLayoutPanel1.ResumeLayout(false);
+            this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.SearchResult_fctb)).EndInit();
             this.tableLayoutPanel2.ResumeLayout(false);
             this.tableLayoutPanel2.PerformLayout();
@@ -170,5 +183,6 @@
         public FastColoredTextBoxNS.FastColoredTextBox SearchResult_fctb;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.ComboBox comboBox1;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -340,6 +340,8 @@ namespace PBSCAnalyzer
         private void AddFolderItems(TreeNode parentNode, string selectedPath)
         {
             string[] directories = Directory.GetDirectories(selectedPath);
+            // Exclude paths starting from '.'
+            directories = directories.Where(x => !Path.GetExtension(x).StartsWith(".")).ToArray();
 
             foreach (string directory in directories)
             {

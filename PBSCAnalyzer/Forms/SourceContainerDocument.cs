@@ -121,7 +121,7 @@ namespace PBSCAnalyzer
             Match result = Regex.Match(sqlText, @"(?<=retrieve=\"")([^\""\~]\n*)*(?=\""+?)");
             //var result = Regex.Match(sqlText, @"(?<=retrieve=\"")([^\""]\n*)*(?=\""+?)");
             sqlText = result.Value;
-            if (string.IsNullOrEmpty(sqlText)) { return; }
+            if (string.IsNullOrEmpty(sqlText) || sqlText.ToUpper().Contains("PBSELECT")) { return; }
             SqlPanel.fastColoredTextBox1.Text = sqlText;
             SqlPanel.SetSyntaxSql();
             SqlPanel.Show(dockPanel1);

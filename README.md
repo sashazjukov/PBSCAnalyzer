@@ -6,7 +6,7 @@
 * Parse .sr\* files and detect objects/events/functions;
 * Object navigation;
 * Fast RegEx based text search;
-* Custom batch commands over the file;
+* Custom batch commands over the file (SVN Log, SVN Balme, Edit file by external application);
 * Workspaces to manage different projects
 * DataWindow debugging helper
 
@@ -24,7 +24,7 @@ Snippets can be edited in UserTextSnippetsConfig.xml file
 
 Download and unzip the latest binaries [PBSC Analyzer v1.0.2.0](https://github.com/sashazjukov/PBSCAnalyzer/releases)
 
-***Quick start***
+***Quick start (version 1.0.0.0)***
 * Add sources to the curent workspace
 
 _**Note:** It uses extracted PowerBuilder objects (\*.sr\*) for analyzing.

@@ -208,6 +208,7 @@ namespace PBSCAnalyzer
 
         public void NavigateToSourceLine(int lineNum)
         {
+            this.Show();
             _isdisableHighlightingObjectOnce = true;
             fastColoredTextBox1.BeginUpdate();            
             fastColoredTextBox1.Navigate(lineNum);

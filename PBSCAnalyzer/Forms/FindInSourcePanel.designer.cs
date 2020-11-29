@@ -81,6 +81,7 @@
             this.SearchResult_fctb.Cursor = System.Windows.Forms.Cursors.IBeam;
             this.SearchResult_fctb.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.SearchResult_fctb.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SearchResult_fctb.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.SearchResult_fctb.IsReplaceMode = false;
             this.SearchResult_fctb.Location = new System.Drawing.Point(3, 33);
             this.SearchResult_fctb.Name = "SearchResult_fctb";

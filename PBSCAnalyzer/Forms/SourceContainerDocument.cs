@@ -117,6 +117,7 @@ namespace PBSCAnalyzer
             SqlPanel.Text = "SQL";
             SqlPanel.SetSourceFileClass(FileClass);
             string sqlText = SourceEditorPanel.fastColoredTextBox1.Text;
+            sqlText = sqlText.Replace("~\"", "");
             Match result = Regex.Match(sqlText, @"(?<=retrieve=\"")([^\""\~]\n*)*(?=\""+?)");
             //var result = Regex.Match(sqlText, @"(?<=retrieve=\"")([^\""]\n*)*(?=\""+?)");
             sqlText = result.Value;

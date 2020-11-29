@@ -110,7 +110,7 @@ namespace PBSCAnalyzer
             sqlRange.ClearStyle(SourceFileStylesClass.PbSpecialSourceKeywordsStyle);
             sqlRange.SetStyle(SourceFileStylesClass.SqlMainKeywordsStyle, SqlMainKeyWords, RegexOptions.IgnoreCase);
             sqlRange.SetStyle(SourceFileStylesClass.SqlOtherKeywordsStyle, SqlOtherKeyWords, RegexOptions.IgnoreCase);
-            sqlRange.SetStyle(SourceFileStylesClass.SqlCoulmnsBrown, @"(?<=(\s|\(|\=)+\w+\.)(?<range>\w+\b)", RegexOptions.IgnoreCase);
+            sqlRange.SetStyle(SourceFileStylesClass.SqlCoulmnsBrown, @"(?<=(\s|\(|\=|\,)+\w+\.)(?<range>\w+\b)", RegexOptions.IgnoreCase);
         }
 
         public static void SetSourceRulesHighlightRegex(object sender, string searchedText)

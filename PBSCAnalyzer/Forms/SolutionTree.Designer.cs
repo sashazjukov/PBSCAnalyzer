@@ -44,11 +44,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
+            this.tsb_export_search_result = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.FindProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.FindInSolutionTextBox = new System.Windows.Forms.ComboBox();
-            this.tsb_export_search_result = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -196,6 +196,16 @@
             this.toolStripButton4.ToolTipText = "Collapse all nodes";
             this.toolStripButton4.Click += new System.EventHandler(this.toolStripButton4_Click);
             // 
+            // tsb_export_search_result
+            // 
+            this.tsb_export_search_result.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsb_export_search_result.Image = ((System.Drawing.Image)(resources.GetObject("tsb_export_search_result.Image")));
+            this.tsb_export_search_result.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsb_export_search_result.Name = "tsb_export_search_result";
+            this.tsb_export_search_result.Size = new System.Drawing.Size(23, 22);
+            this.tsb_export_search_result.Text = "Export Search Result in a new note tab";
+            this.tsb_export_search_result.Click += new System.EventHandler(this.tsb_export_search_result_Click);
+            // 
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -231,16 +241,6 @@
             this.FindInSolutionTextBox.TabIndex = 12;
             this.FindInSolutionTextBox.TextChanged += new System.EventHandler(this.FindInSolutionTextBox_TextChanged);
             this.FindInSolutionTextBox.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FindInSolutionTextBox_KeyUp);
-            // 
-            // tsb_export_search_result
-            // 
-            this.tsb_export_search_result.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsb_export_search_result.Image = ((System.Drawing.Image)(resources.GetObject("tsb_export_search_result.Image")));
-            this.tsb_export_search_result.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsb_export_search_result.Name = "tsb_export_search_result";
-            this.tsb_export_search_result.Size = new System.Drawing.Size(23, 22);
-            this.tsb_export_search_result.Text = "Export Search Result";
-            this.tsb_export_search_result.Click += new System.EventHandler(this.tsb_export_search_result_Click);
             // 
             // SolutionTree
             // 

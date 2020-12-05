@@ -40,9 +40,10 @@ namespace PBSCAnalyzer
                 var lineText = SearchResult_fctb.Lines[tb.Selection.Start.iLine];
                 Match result = Regex.Match(lineText, @"([0-9]+)");
                 if (!string.IsNullOrEmpty(result.Value))
-                {
+                {                    
                     SourceEditorPanel.Show();
                     SourceEditorPanel.fastColoredTextBox1.Navigate(Convert.ToInt32(result.Value));
+                    SearchResult_fctb.Focus();
                 }
 
 //                if (lastNavigatedDateTime != tb[tb.Selection.Start.iLine].LastVisit)

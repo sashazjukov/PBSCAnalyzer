@@ -249,20 +249,20 @@ namespace PBSCAnalyzer
         }
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
-        {                       
-                if (e.Node != null && e.X > 40)
+        {
+            if (e.Node != null && e.X > 40)
+            {
+                if (toolStripButton3.Checked)
                 {
-                    if (toolStripButton3.Checked)
+                    if ((e.Node.Parent != null && e.Node.Parent.IsExpanded == false) || e.Node.Nodes.Count > 0 && e.Node.IsExpanded == false)
                     {
-                        if ((e.Node.Parent != null && e.Node.Parent.IsExpanded == false) || e.Node.Nodes.Count > 0 && e.Node.IsExpanded == false)
-                        {
-                            treeView1.CollapseAll();
-                            e.Node.Expand();
-                        }
+                        treeView1.CollapseAll();
+                        e.Node.Expand();
                     }
-                    SourceContainerDocument.ObjecExplorerNodeClicked(e.Node);
-                    //treeView1.EndUpdate();
-                }                                    
+                }
+                SourceContainerDocument.ObjecExplorerNodeClicked(e.Node);
+                //treeView1.EndUpdate();
+            }
             ExpandChildeDataWindowsNode(e.Node);
         }
 

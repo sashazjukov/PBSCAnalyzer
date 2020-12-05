@@ -205,7 +205,10 @@ namespace PBSCAnalyzer
             else
             {
                 var filePositionItem = (node.Tag as FilePositionItem);
-                if (filePositionItem != null) { lineNumber = filePositionItem.LineNumberStart; }
+                if (filePositionItem != null && (filePositionItem.ItemType != "sqlArgument"))
+                {
+                    lineNumber = filePositionItem.LineNumberStart;
+                }
             }
             if (lineNumber > 1) { SourceEditorPanel.NavigateToSourceLine(lineNumber); }
 

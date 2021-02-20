@@ -41,6 +41,13 @@ namespace PBSCAnalyzer
             _findInSourcePanel.Show(dockPanel1, DockState.DockBottomAutoHide);
             _sqlResultPanel.Show(dockPanel1, DockState.DockBottomAutoHide);
             _objectExplorerPanel.Show(dockPanel1, DockState.DockRight);
+            this.Activated += SourceContainerDocument_Activated;
+        }
+
+        private void SourceContainerDocument_Activated(object sender, EventArgs e)
+        {            
+            if (SourceEditorPanel != null) SourceEditorPanel.CreateUserSnippetsMenus();
+            if (_sqlPanel != null) _sqlPanel.CreateUserSnippetsMenus();
         }
 
         private void SourceContainerDocument_FormClosing(object sender, FormClosingEventArgs e)
@@ -293,11 +300,22 @@ namespace PBSCAnalyzer
             {
                 if (!useLastSql || String.IsNullOrEmpty(_last_ProcessedSqlText))
                 {
-                    string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;                
+                    string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;
                     _last_ProcessedSqlText = GetProcessedSqlText(text);
                 }
+                FileClass.Name = MarkText(FileClass.Name);
+                this.Text = FileClass.Name;
                 _sqlResultPanel.ExecuteSql(_last_ProcessedSqlText);
             }
+        }
+
+        private string MarkText(string text)
+        {
+            if (text.LastIndexOf(" ^",StringComparison.InvariantCulture) <= 0)
+            {
+                return text + " ^";
+            }
+            return text;
         }
 
         public void ExecuteSqlSelection()

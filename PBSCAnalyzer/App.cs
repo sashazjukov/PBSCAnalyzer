@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Westwind.Utilities.Configuration;
 
 namespace PBSCAnalyzer
@@ -22,6 +23,7 @@ namespace PBSCAnalyzer
         public static ApplicationConfiguration Configuration { get; set; }
         public static UserCommandsConfiguration UserCommandsConfiguration { get; set; }
         public static UserSnippetConfiguration UserSnippetConfiguration { get; set; }
+        public static int TotalUsersnippets { get; set; }
 
         static App()
         {

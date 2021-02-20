@@ -56,6 +56,7 @@ namespace PBSCAnalyzer.Forms
                     try
                     {
                         dgrv = dataGridView1;
+                        
                         var dt = new DataTable();
                         dt.Load(reader);
                         if (tsb_transpone.Checked)

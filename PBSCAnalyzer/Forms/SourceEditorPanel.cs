@@ -46,21 +46,13 @@ namespace PBSCAnalyzer
             this.toolStrip1.Items.Add(new ToolStripSeparator());
 
             // User Text Snippets
-            App.UserSnippetConfiguration.UserSnippets.ForEach(x =>
-                                                   {
-                                                       ToolStripDropDownButton ts = new ToolStripDropDownButton();
-                                                       ts.AutoToolTip = true;
-                                                       ts.Text = x.Caption;
-                                                       ts.DisplayStyle = ToolStripItemDisplayStyle.Text;
-                                                       var toolStripItem = this.toolStrip1.Items.Add(ts);
-
-                                                       ProcessToolStripSubItems(ts, x);
-                                                   });
+            CreateUserSnippetsMenus();
             
             //fastColoredTextBox1.Styles.
             //            fastColoredTextBox1.Font = new Font("Microsoft Sans Serif", 10f,FontStyle.Regular);
 
             this.SetFont();
+            
             //fastColoredTextBox1.Font = SourceFileStylesClass.SourceEditorFont;
             
             //            fastColoredTextBox1.Font = new Font("Consolas", 9.25f, FontStyle.Regular);
@@ -70,29 +62,166 @@ namespace PBSCAnalyzer
             //fastColoredTextBox1.Font = new Font(FontFamily.GenericMonospace, 10);
             //fastColoredTextBox1.ShowFoldingLines = true;            
             //fastColoredTextBox1.DelayedEventsInterval = 100;
+        }        
+
+        List<ToolStripDropDownButton> tempTollstripItems = new List<ToolStripDropDownButton>();
+        private int _totalUsersnippets = -1;
+
+        public void CreateUserSnippetsMenus()
+        {
+            if (App.TotalUsersnippets == _totalUsersnippets) return;
+
+            _totalUsersnippets = 0;
+            if (tempTollstripItems.Count > 0)
+            {
+                tempTollstripItems.ForEach(x =>
+                {
+                    x.HideDropDown();
+                    toolStrip1.Items.Remove(x);
+                });
+                tempTollstripItems.Clear();
+            }
+
+            App.UserSnippetConfiguration.UserSnippets.ForEach(x =>
+            {
+                ToolStripDropDownButton ts = new ToolStripDropDownButton();
+                ts.AutoToolTip = true;
+                ts.Text = x.Caption;
+                ts.DisplayStyle = ToolStripItemDisplayStyle.Text;
+
+                tempTollstripItems.Add(ts);
+                var toolStripItem = this.toolStrip1.Items.Add(ts);
+                _totalUsersnippets++;
+                ProcessToolStripSubItems(ts, x);
+            });
+            App.TotalUsersnippets = _totalUsersnippets;
         }
 
         private void ProcessToolStripSubItems(ToolStripDropDownButton ts, UserTextSnippet x)
         {
             x.SubSnippets.ForEach(n =>
-            {
-                if (n.IsMenu)
                 {
-                    ToolStripDropDownButton subts = new ToolStripDropDownButton();
-                    subts.AutoToolTip = true;
-                    subts.Text = n.Caption;
-                    ts.DropDownItems.Add(subts);
-                    ProcessToolStripSubItems(subts, n);
+                    if (n.IsMenu)
+                    {
+                        ToolStripDropDownButton subts = new ToolStripDropDownButton();
+                        subts.AutoToolTip = true;
+                        subts.Text = n.Caption;
+                        subts.Tag = n;
+                        subts.MouseUp += ToolStripItem_MouseUp;
+                        ts.DropDownItems.Add(subts);
+                        n.ParentUserTextSnippet = x;
+                        ProcessToolStripSubItems(subts, n);
+                    }
+                    else
+                    {
+                        var toolStripItem = ts.DropDownItems.Add(n.Caption.Length == 0 ? n.Text : n.Caption);
+                        toolStripItem.Tag = n;
+                        toolStripItem.ToolTipText = n.Text;
+                        //toolStripItem.Click += TextSnippetToolStripItemOnClick;
+                        toolStripItem.MouseEnter += ToolStripItem_MouseEnter;
+                        toolStripItem.MouseUp += ToolStripItem_MouseUp;
+                        n.ParentUserTextSnippet = x;
+                    }
+                    _totalUsersnippets++;
+                }
+            );
+            var toolStripItemAdd = ts.DropDownItems.Add("{Add}");
+            toolStripItemAdd.Tag = x;
+            toolStripItemAdd.ToolTipText = "Left Click - Add selected/(from clipboard) text as a new snippet!" +
+                                           "\r\n" + "Right click - Add a new sub menu with a caption = selected/(from clipboard) text" +
+                                           "\r\n" + "If text = '-' then insert a separator";            
+            toolStripItemAdd.MouseUp += ToolStripItemAdd_MouseUp;
+            toolStripItemAdd.MouseEnter += ToolStripItemAdd_MouseEnter;
+        }
+
+        private void ToolStripItemAdd_MouseUp(object sender, MouseEventArgs e)
+        {
+            var toolStripItem = sender as ToolStripItem;
+            UserTextSnippet ddButtons = toolStripItem.Tag as UserTextSnippet;
+
+            UserTextSnippet textSnippet = new UserTextSnippet();
+            string text = fastColoredTextBox1.SelectedText;
+
+            if (string.IsNullOrEmpty(text))
+            {
+                string ClipboardText = System.Windows.Forms.Clipboard.GetText();
+                if (string.IsNullOrEmpty(ClipboardText))
+                {
+                    return;
                 }
                 else
                 {
-                    var toolStripItem = ts.DropDownItems.Add(n.Caption.Length == 0 ? n.Text : n.Caption);
-                    toolStripItem.Tag = n;
-                    toolStripItem.ToolTipText = n.Text;
-                    toolStripItem.Click += TextSnippetToolStripItemOnClick;
-                    toolStripItem.MouseEnter += ToolStripItem_MouseEnter;
-                }                                    
-            });
+                    text = ClipboardText;
+                }
+            }
+
+            textSnippet.Caption = text;
+            
+            textSnippet.ParentUserTextSnippet = ddButtons;
+
+            if ((e.Button & MouseButtons.Right) != 0)
+            {
+                textSnippet.IsMenu = true;
+                textSnippet.Text = "";
+            }
+            else
+            {                              
+                textSnippet.IsMenu = false;
+                textSnippet.Text = text;
+            }
+
+            ddButtons.SubSnippets.Add(textSnippet);
+            _totalUsersnippets = 0;
+            CreateUserSnippetsMenus();
+        }
+
+        private void ToolStripItem_MouseUp(object sender, MouseEventArgs e)
+        {
+            var snd = sender as ToolStripDropDownButton;
+            if (snd != null)
+            {
+
+            }
+
+            if ((e.Button & MouseButtons.Right) != 0)
+            {
+                var toolStripItem = sender as ToolStripItem;
+                UserTextSnippet userCommand = toolStripItem.Tag as UserTextSnippet;
+                if (userCommand != null)
+                {
+                    if (MessageBox.Show(this, $@"Remove User snippet?", "Remove User snippet?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+
+                        userCommand.ParentUserTextSnippet.SubSnippets.Remove(userCommand);                        
+                    }
+                    _totalUsersnippets = 0;
+                    CreateUserSnippetsMenus();
+                }                
+            }
+            else
+            {
+                var toolStripItem = sender as ToolStripItem;
+                UserTextSnippet userCommand = toolStripItem.Tag as UserTextSnippet;
+
+                if (!string.IsNullOrEmpty(userCommand.Text) && userCommand.Text != "-")
+                {
+
+                    string ClipboardText = System.Windows.Forms.Clipboard.GetText();
+                    if (string.IsNullOrEmpty(ClipboardText))
+                    {
+                        ClipboardText = "";
+                    }
+
+                    string result = userCommand.Text.Replace("{1}", ClipboardText);
+                    fastColoredTextBox1.InsertText(result); //"\r\n"
+                }
+            }
+
+        }       
+
+        private void ToolStripItemAdd_MouseEnter(object sender, EventArgs e)
+        {
+            
         }
 
         private void ToolStripItem_MouseEnter(object sender, EventArgs e)
@@ -109,21 +238,7 @@ namespace PBSCAnalyzer
             string result = userCommand.Text.Replace("{1}", ClipboardText);
             toolStripItem.ToolTipText = result;
         }
-
-        private void TextSnippetToolStripItemOnClick(object sender, EventArgs e)
-        {
-            var toolStripItem = sender as ToolStripItem;
-            UserTextSnippet userCommand = toolStripItem.Tag as UserTextSnippet;
-
-            string ClipboardText = System.Windows.Forms.Clipboard.GetText();
-            if (string.IsNullOrEmpty(ClipboardText))
-            {
-                ClipboardText = "";
-            }
-
-            string result = userCommand.Text.Replace("{1}", ClipboardText);
-            fastColoredTextBox1.InsertText(result);//"\r\n"            
-        }
+       
 
         private void UserComnadToolStripItemOnClick(object sender, EventArgs eventArgs)
         {
@@ -329,7 +444,7 @@ namespace PBSCAnalyzer
 
         public void SetSourceFileClass(FileClass fileClass)
         {
-            FileClass = fileClass;
+            FileClass = fileClass;           
         }
 
         private void toolStripButton3_Click_1(object sender, EventArgs e)

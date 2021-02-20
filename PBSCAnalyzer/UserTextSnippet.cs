@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 
 namespace PBSCAnalyzer
 {
@@ -7,8 +9,12 @@ namespace PBSCAnalyzer
         public string Caption = "";
         public string Text = "";
         public bool IsMenu = false;
-        public List<UserTextSnippet> SubSnippets { get; set; }
+        public List<UserTextSnippet> SubSnippets = new List<UserTextSnippet>();
         public string PlaceName;
         public string HotKey;
+
+        [XmlIgnore]
+        [NonSerialized]
+        public UserTextSnippet ParentUserTextSnippet;
     }
 }

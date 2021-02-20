@@ -56,6 +56,7 @@ namespace PBSCAnalyzer
         {
             get
             {
+               // _path = @"I:\Work\Test_PBSC\Debug\";
                 if (!Directory.Exists(_path))
                 {
                     Directory.CreateDirectory(_path);

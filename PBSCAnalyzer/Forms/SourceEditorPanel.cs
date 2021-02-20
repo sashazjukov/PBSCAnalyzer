@@ -213,7 +213,14 @@ namespace PBSCAnalyzer
                     }
 
                     string result = userCommand.Text.Replace("{1}", ClipboardText);
-                    fastColoredTextBox1.InsertText(result); //"\r\n"
+                    if ((Control.ModifierKeys & Keys.Shift) == Keys.Shift)
+                    {
+                        System.Windows.Forms.Clipboard.SetText(result);
+                    }
+                    else
+                    {
+                        fastColoredTextBox1.InsertText(result); //"\r\n"
+                    }
                 }
             }
 

@@ -56,7 +56,8 @@ namespace PBSCAnalyzer.Forms
                     try
                     {
                         dgrv = dataGridView1;
-                        
+                        dgrv.SuspendLayout();
+
                         var dt = new DataTable();
                         dt.Load(reader);
                         if (tsb_transpone.Checked)
@@ -73,6 +74,7 @@ namespace PBSCAnalyzer.Forms
                         }
                         dgrv.DataSource = dt;
                         DatagridUtils.FormatDataGridView(dgrv);
+                        dgrv.ResumeLayout();
                     }
                     finally
                     {

@@ -115,7 +115,7 @@ namespace PBSCAnalyzer
                     }
                     fileClass.IsOpened = true;
                     newDocument = CreateNewDocument(fileClass);
-                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                    //OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                     if (App.Configuration.SaveOnCloseOpenDocument)
                     {
                         if (MainEngine.Instance.IsLoadingWorkspase == false)
@@ -207,7 +207,7 @@ namespace PBSCAnalyzer
             SetSolutionTreeStatusText("Ready.");
             if (eSearchIn == ESearchIn.OpenedDocuments)
             {
-                OpenedDocumentsPanel.SetStatusText($"Opened {_totalFiind} files");
+                OpenedDocumentsPanel.SetStatusText($"Total: {_totalFiind}");
                 //SetSolutionTreeStatusText($"Opened {_totalFiind} files");
             }
             else
@@ -341,7 +341,7 @@ namespace PBSCAnalyzer
         {
             string[] directories = Directory.GetDirectories(selectedPath);
             // Exclude paths starting from '.'
-            directories = directories.Where(x => !Path.GetExtension(x).StartsWith(".")).ToArray();
+            directories = directories.Where(x => !x.Contains("\\.")).ToArray();
 
             foreach (string directory in directories)
             {

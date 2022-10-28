@@ -39,7 +39,7 @@ namespace PBSCAnalyzer
 
             SourceEditorPanel.Show(dockPanel1);
             _findInSourcePanel.Show(dockPanel1, DockState.DockBottomAutoHide);
-            _sqlResultPanel.Show(dockPanel1, DockState.DockBottomAutoHide);
+            _sqlResultPanel.Show(dockPanel1, DockState.DockBottomAutoHide);            
             _objectExplorerPanel.Show(dockPanel1, DockState.DockRight);
             this.Activated += SourceContainerDocument_Activated;
         }
@@ -58,7 +58,7 @@ namespace PBSCAnalyzer
             if (e.CloseReason != CloseReason.UserClosing) return;
             if (MainEngine.Instance.CloseInBatch == false)
             {
-                MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                //MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                 if (App.Configuration.SaveOnCloseOpenDocument)
                 {
                     MainEngine.Instance.SaveWorkSpace();
@@ -74,7 +74,7 @@ namespace PBSCAnalyzer
             
             if (MainEngine.Instance.CloseInBatch == false)
             {                
-                MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                //MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                 if (App.Configuration.SaveOnCloseOpenDocument)
                 {
                     MainEngine.Instance.SaveWorkSpace();
@@ -296,17 +296,29 @@ namespace PBSCAnalyzer
         public void ExecuteSql(bool useLastSql = false)
         {
             MyDockHelper.MakePanelVisible(_sqlResultPanel);
-            if (SqlPanel != null)
+
+            // last sql is for Transponse only
+            if (!useLastSql || String.IsNullOrEmpty(_last_ProcessedSqlText))
             {
-                if (!useLastSql || String.IsNullOrEmpty(_last_ProcessedSqlText))
+                string text;
+                if (SqlPanel != null)
                 {
-                    string text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;
-                    _last_ProcessedSqlText = GetProcessedSqlText(text);
+                    text = string.IsNullOrEmpty(SqlPanel.fastColoredTextBox1.SelectedText) ? SqlPanel.fastColoredTextBox1.Text : SqlPanel.fastColoredTextBox1.SelectedText;
                 }
-                FileClass.Name = MarkText(FileClass.Name);
-                this.Text = FileClass.Name;
-                _sqlResultPanel.ExecuteSql(_last_ProcessedSqlText);
+                else
+                {
+                    text = SourceEditorPanel.fastColoredTextBox1.SelectedText;
+                }
+                if (string.IsNullOrEmpty(text))
+                {
+                    MessageBox.Show(this, $@"No SQL query is selected, or not on the SQL tab.", "Execute SQL", MessageBoxButtons.OK);
+                    return;
+                }
+                _last_ProcessedSqlText = GetProcessedSqlText(text);
             }
+            FileClass.Name = MarkText(FileClass.Name);
+            this.Text = FileClass.Name;
+            _sqlResultPanel.ExecuteSql(_last_ProcessedSqlText);
         }
 
         private string MarkText(string text)

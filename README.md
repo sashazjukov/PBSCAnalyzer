@@ -10,7 +10,7 @@
 * Workspaces to manage different projects
 * DataWindow debugging helper
 
-***New in version 1.0.2.0:***
+***New in version 1.0.2.1:***
 * Format and execute SQL queries.
 
 Click "Execute SQL" button when you are on the "SQL" or "Note[i]" panel, then edit Connection string in the bottom of the SQL Result panel, click "Execute SQL" button again.
@@ -22,7 +22,7 @@ Snippets can be edited in UserTextSnippetsConfig.xml file
 
 ***Instalation***
 
-Download and unzip the latest binaries [PBSC Analyzer v1.0.2.0](https://github.com/sashazjukov/PBSCAnalyzer/releases)
+Download and unzip the latest binaries [PBSC Analyzer v1.0.2.1](https://github.com/sashazjukov/PBSCAnalyzer/releases)
 
 ***Quick start (version 1.0.0.0)***
 * Add sources to the curent workspace

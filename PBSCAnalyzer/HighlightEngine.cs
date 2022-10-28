@@ -1,6 +1,6 @@
+using FastColoredTextBoxNS;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using FastColoredTextBoxNS;
 
 namespace PBSCAnalyzer
 {
@@ -8,8 +8,8 @@ namespace PBSCAnalyzer
     {
         public static void SetSourceRules(object sender, bool isSql, FileClass fileClass)
         {
-            
-            var fctb = (FastColoredTextBox) sender;
+
+            var fctb = (FastColoredTextBox)sender;
             var range = fctb.Range;
             //var range = fctb.Range;
             range.BeginUpdate();
@@ -17,28 +17,28 @@ namespace PBSCAnalyzer
 
             if (fileClass.FilePath.Contains(".srd") && !isSql)
             {
-                range.SetStyle(SourceFileStylesClass.TypeStyle, @"(?<range>(\s*|\()(\w|\.)+)\s*\=",RegexOptions.Compiled);
+                range.SetStyle(SourceFileStylesClass.TypeStyle, @"(?<range>(\s*|\()(\w|\.)+)\s*\=", RegexOptions.Compiled);
             }
             //  range.SetStyle(SourceFileStylesClass.WhiteRangeStyle, @"(?si)([\n](public|private|protected)(\sfunction)?|^(public|private|protected)(\sfunction)?)\s*(?<functype>\w+)\s*(?<functname>\w+)\s*(\((?<params>[^\)]*?)\));+(?<body>.*?)(?<endfunct>end(\sfunction|\ssubroutine))");
 
             //SQL Arguments
             range.SetStyle(SourceFileStylesClass.MaroonStyle, @"(:\w*)");
-          
+
             //Operators
             range.SetStyle(SourceFileStylesClass.OperatorStyle, @"(\.|\(|\)|\=|\[|\]|\>|\<|\+|\-|\,|\;|\*|\&)");
 
             //Data Types
-            const string pbDataTypes = @"(DATAWINDOWCHILD|subroutine|Blob|Integer|Int|Boolean|Byte|Long|Char|character|Real|Date|String|DateTime|Time|Decimal|Dec|UnsignedInteger|UnsignedInt|UInt|Double|UnsignedLong|ULong)";
+            const string pbDataTypes = @"(varchar|nvarchar|DATAWINDOWCHILD|subroutine|Blob|Integer|Int|Boolean|Byte|Long|Char|character|Real|Date|String|DateTime|Time|Decimal|Dec|UnsignedInteger|UnsignedInt|UInt|Double|UnsignedLong|ULong)";
             range.SetStyle(SourceFileStylesClass.SaddleBrown, @"\b" + pbDataTypes + @"\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             //string highlighting
-            range.SetStyle(SourceFileStylesClass.BrownStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'", RegexOptions.Compiled);            
+            range.SetStyle(SourceFileStylesClass.BrownStyle, @"""""|@""""|''|@"".*?""|(?<!@)(?<range>"".*?[^\\]"")|'.*?[^\\]'", RegexOptions.Compiled);
 
             //number highlighting
-            range.SetStyle(SourceFileStylesClass.MagentaStyle, @"\b(\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+|true|false)\b",RegexOptions.IgnoreCase| RegexOptions.Compiled);
+            range.SetStyle(SourceFileStylesClass.MagentaStyle, @"\b(\d+[\.]?\d*([eE]\-?\d+)?[lLdDfF]?\b|\b0x[a-fA-F\d]+|true|false)\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
             //True False highlighting
-//            range.SetStyle(SourceFileStylesClass.TrueStyle, @"\b(true)\b",RegexOptions.IgnoreCase);
-//            range.SetStyle(SourceFileStylesClass.FalseStyle, @"\b(false)\b",RegexOptions.IgnoreCase);
+            //            range.SetStyle(SourceFileStylesClass.TrueStyle, @"\b(true)\b",RegexOptions.IgnoreCase);
+            //            range.SetStyle(SourceFileStylesClass.FalseStyle, @"\b(false)\b",RegexOptions.IgnoreCase);
 
             string SpecialWords = @"(?<range>\b(readonly|ref|public|Private|protected|function|subroutine|global|within|from|type)\b|\btype\b( variables)?|[\r\n]event|[\r\n]end (event|subroutine|function|type|variables))";
             range.SetStyle(SourceFileStylesClass.PbSpecialSourceKeywordsStyle, SpecialWords, RegexOptions.IgnoreCase | RegexOptions.Compiled);
@@ -47,11 +47,11 @@ namespace PBSCAnalyzer
             range.SetStyle(SourceFileStylesClass.PbKeywordsStyle, PbKeyWords, RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             //Function Call Highlight
-            range.SetStyle(SourceFileStylesClass.FunctionCallStyle, @"(?<range>(?!"+ PbKeyWords+"|"+ pbDataTypes + "|\b(WHERE|SET)\b" + @")\b\w+)\s*?\(", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
+            range.SetStyle(SourceFileStylesClass.FunctionCallStyle, @"(?<range>(?!" + PbKeyWords + "|" + pbDataTypes + "|\b(WHERE|SET|CASE|WHEN|ON)\b" + @")\b\w+)\s*?\(", RegexOptions.Singleline | RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
             //Type names highlighting            
             range.SetStyle(SourceFileStylesClass.TypeStyle, @"(type){1}\s(?<range>\w+?)\b\s(from)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-            
+
             //Event Function names highlighting          
             //range.SetStyle(SourceFileStylesClass.EventFunctionStyle, @"[\r\n](event|function|public|protected|private){1}\s?(" + pbDataTypes + @"\s+)?(?<range>\w+?)\b", RegexOptions.IgnoreCase);
 
@@ -95,15 +95,15 @@ namespace PBSCAnalyzer
             }
             range.EndUpdate();
 
-            
+
         }
 
         private static void SetSqlStyle(Range sqlRange)
         {
-            const string SqlMainKeyWords = @"\b(GO|EXECUTE|IMMEDIATE|SELECT|SELECTBLOB|INTO|where|group|by|order|FROM|AS|DELETE|UPDATE|USING|commit|rollback|INSERT|SET|
+            const string SqlMainKeyWords = @"\b(ADD|DROP|GO|EXECUTE|IMMEDIATE|SELECT|SELECTBLOB|INTO|where|group|by|Having|with|order|FROM|AS|DELETE|UPDATE|USING|commit|rollback|INSERT|SET|
                                                     drop|CREATE|TABLE|index|alter|View|function|create or replace|column|trigger)\b";
-            const string SqlOtherKeyWords = @"\b(DISTINCT|AND|IF|END|ELSE|when|case|LEFT|RIGHT|OUTER|JOIN|not|in|is|null|union|all|INNER|ON|LIKE|OR|between|new|old|BEGIN|end|THEN|PROCEDURE|OPEN|LOOP|fetch|exit|EXCEPTION|CURSOR)\b";
-            
+            const string SqlOtherKeyWords = @"\b(REFERENCES|ASC|DESC|FOREIGN|CHECK|dbo|CONSTRAINT|DISTINCT|AND|IF|END|ELSE|when|case|LEFT|RIGHT|OUTER|JOIN|not|in|is|null|union|all|INNER|ON|LIKE|OR|between|new|old|BEGIN|end|THEN|PROCEDURE|OPEN|LOOP|fetch|exit|EXCEPTION|CURSOR)\b";
+
             sqlRange.ClearStyle(SourceFileStylesClass.PbKeywordsStyle);
             sqlRange.ClearStyle(SourceFileStylesClass.TypeStyle);
             sqlRange.ClearStyle(SourceFileStylesClass.EventFunctionStyle);

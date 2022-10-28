@@ -56,7 +56,7 @@ namespace PBSCAnalyzer
         {
             get
             {
-               // _path = @"I:\Work\Test_PBSC\Debug\";
+                //_path = @"I:\Work\Test_PBSC\Debug\";
                 if (!Directory.Exists(_path))
                 {
                     Directory.CreateDirectory(_path);
@@ -102,8 +102,7 @@ namespace PBSCAnalyzer
 
         private void selectSourceDirToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var folderBrowserDialog = new FolderBrowserDialog();
-            folderBrowserDialog.SelectedPath =@"\Work\Patrix\source\";
+            var folderBrowserDialog = new FolderBrowserDialog();            
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 string selectedPath = folderBrowserDialog.SelectedPath;

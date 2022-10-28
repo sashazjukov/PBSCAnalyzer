@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Win32;
 using WeifenLuo.WinFormsUI.Docking;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TaskbarClock;
 
 namespace PBSCAnalyzer.Forms
 {
@@ -19,6 +21,12 @@ namespace PBSCAnalyzer.Forms
         {
             InitializeComponent();
             this.Shown += SqlResultPanel_Shown;
+            dataGridView1.DataError += DataGridView1_DataError;
+        }
+
+        private void DataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            
         }
 
         private void SqlResultPanel_Shown(object sender, EventArgs e)
@@ -37,22 +45,52 @@ namespace PBSCAnalyzer.Forms
             //WaitForm wf = new WaitForm();
             try
             {
-                
-               // wf.Show();
+                textBox_sql_messages.AppendText("------------------------");
+                textBox_sql_messages.AppendText(Environment.NewLine);
+
+                // wf.Show();
                 string queryString = getProcessedSqlText;
                 string connectionString = tb_connectionString.Text;
 
                 if (String.IsNullOrEmpty(tb_connectionString.Text))
-                {                    
+                {
                     return;
                 }
 
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
+                    
+                    string statistics = "";
+                    if (toolStripButton_statistics_time.Checked)
+                    { statistics += "set statistics time on;"; }
+
+                    if (toolStripButton_statistics_IO.Checked)
+                    { statistics += "set statistics io on;"; }
+
+                    queryString = statistics + queryString;
+
                     SqlCommand command = new SqlCommand(queryString, connection);
                     //command.Parameters.AddWithValue("@tPatSName", "Your-Parm-Value");
+                    connection.FireInfoMessageEventOnUserErrors = true;
+                    connection.InfoMessage += delegate (object obj, SqlInfoMessageEventArgs err)
+                    {
+                        var ab = err.Message;
+                        textBox_sql_messages.AppendText(ab);
+                        textBox_sql_messages.AppendText(Environment.NewLine);
+                    };
+
+                    //connection.StatisticsEnabled = true;
+
                     connection.Open();
                     SqlDataReader reader = command.ExecuteReader();
+                    IDictionary stats = connection.RetrieveStatistics();
+                    foreach (DictionaryEntry item in stats)
+                    {
+                        //list all the availables keys and values
+                        //textBox_sql_messages.AppendText(", " + item.Key + " :   " + item.Value);                       
+                    }
+                    // textBox_sql_messages.AppendText(Environment.NewLine);
+
                     try
                     {
                         dgrv = dataGridView1;
@@ -60,6 +98,9 @@ namespace PBSCAnalyzer.Forms
 
                         var dt = new DataTable();
                         dt.Load(reader);
+
+                        tabPage_rows.Text = "Rows (" + dt.Rows.Count + ")";
+
                         if (tsb_transpone.Checked)
                         {
                             dt = DatagridUtils.TransposeDataTable(dt);
@@ -75,6 +116,10 @@ namespace PBSCAnalyzer.Forms
                         dgrv.DataSource = dt;
                         DatagridUtils.FormatDataGridView(dgrv);
                         dgrv.ResumeLayout();
+                        //dgrv.PerformLayout();
+                        tabControl1.SelectTab(0);
+                        SourceContainerDocument.SourceEditorPanel.fastColoredTextBox1.Focus();
+
                     }
                     finally
                     {
@@ -85,7 +130,9 @@ namespace PBSCAnalyzer.Forms
             }
             catch (Exception e)
             {
-                MessageBox.Show(e.Message, "SQL Result Panel");
+                //MessageBox.Show(e.Message, "SQL Result Panel");
+                tabControl1.SelectTab(1);
+                SourceContainerDocument.SourceEditorPanel.fastColoredTextBox1.Focus();
             }
             finally
             {
@@ -120,7 +167,25 @@ namespace PBSCAnalyzer.Forms
 
         private void tsb_transpone_Click(object sender, EventArgs e)
         {
+            // reexecutuate last sql
             this.SourceContainerDocument.SourceEditorPanel.SourceContainerDocument.ExecuteSql(true);
+        }
+
+        private void toolStripButton_statistics_IO_Click(object sender, EventArgs e)
+        {
+            // reexecutuate last sql when button is checked
+            if (toolStripButton_statistics_IO.Checked)
+            {
+                // show tab first, it then can be changed if there are errors
+                tabControl1.SelectTab(1);
+                // reexcute sql and represent ressult in transponse mode
+                this.SourceContainerDocument.SourceEditorPanel.SourceContainerDocument.ExecuteSql(true);                
+            }
+        }
+
+        private void textBox_sql_messages_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

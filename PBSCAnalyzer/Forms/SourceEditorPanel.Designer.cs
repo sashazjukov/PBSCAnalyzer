@@ -39,9 +39,15 @@
             this.WordWrap_toolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton4 = new System.Windows.Forms.ToolStripButton();
             this.CopySql_Button = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButton_count = new System.Windows.Forms.ToolStripButton();
             this.tsb_ExecuteSql = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton6 = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripDropDownButton_Frame = new System.Windows.Forms.ToolStripDropDownButton();
+            this.forPBCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.unFrmaeFromPBCodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripButton_copyPath = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.fastColoredTextBox1 = new FastColoredTextBoxNS.FastColoredTextBox();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fastColoredTextBox1)).BeginInit();
@@ -58,9 +64,13 @@
             this.WordWrap_toolStripButton,
             this.toolStripButton4,
             this.CopySql_Button,
+            this.toolStripButton_count,
             this.tsb_ExecuteSql,
             this.toolStripButton6,
-            this.toolStripSeparator3});
+            this.toolStripSeparator3,
+            this.toolStripDropDownButton_Frame,
+            this.toolStripButton_copyPath,
+            this.toolStripSeparator4});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(847, 25);
@@ -141,6 +151,16 @@
             this.CopySql_Button.Text = "Copy SQL";
             this.CopySql_Button.Click += new System.EventHandler(this.CopySql_Button_Click);
             // 
+            // toolStripButton_count
+            // 
+            this.toolStripButton_count.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton_count.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_count.Image")));
+            this.toolStripButton_count.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_count.Name = "toolStripButton_count";
+            this.toolStripButton_count.Size = new System.Drawing.Size(44, 22);
+            this.toolStripButton_count.Text = "Count";
+            this.toolStripButton_count.Click += new System.EventHandler(this.toolStripButton_count_Click);
+            // 
             // tsb_ExecuteSql
             // 
             this.tsb_ExecuteSql.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
@@ -166,6 +186,46 @@
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
             // 
+            // toolStripDropDownButton_Frame
+            // 
+            this.toolStripDropDownButton_Frame.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripDropDownButton_Frame.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.forPBCodeToolStripMenuItem,
+            this.unFrmaeFromPBCodeToolStripMenuItem});
+            this.toolStripDropDownButton_Frame.Image = ((System.Drawing.Image)(resources.GetObject("toolStripDropDownButton_Frame.Image")));
+            this.toolStripDropDownButton_Frame.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripDropDownButton_Frame.Name = "toolStripDropDownButton_Frame";
+            this.toolStripDropDownButton_Frame.Size = new System.Drawing.Size(53, 22);
+            this.toolStripDropDownButton_Frame.Text = "Frame";
+            // 
+            // forPBCodeToolStripMenuItem
+            // 
+            this.forPBCodeToolStripMenuItem.Name = "forPBCodeToolStripMenuItem";
+            this.forPBCodeToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.forPBCodeToolStripMenuItem.Text = "Frame For PB code";
+            this.forPBCodeToolStripMenuItem.Click += new System.EventHandler(this.forPBCodeToolStripMenuItem_Click);
+            // 
+            // unFrmaeFromPBCodeToolStripMenuItem
+            // 
+            this.unFrmaeFromPBCodeToolStripMenuItem.Name = "unFrmaeFromPBCodeToolStripMenuItem";
+            this.unFrmaeFromPBCodeToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.unFrmaeFromPBCodeToolStripMenuItem.Text = "Un Frmae From PB code";
+            // 
+            // toolStripButton_copyPath
+            // 
+            this.toolStripButton_copyPath.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolStripButton_copyPath.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton_copyPath.Image")));
+            this.toolStripButton_copyPath.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButton_copyPath.Name = "toolStripButton_copyPath";
+            this.toolStripButton_copyPath.Size = new System.Drawing.Size(66, 22);
+            this.toolStripButton_copyPath.Text = "Copy Path";
+            this.toolStripButton_copyPath.Click += new System.EventHandler(this.toolStripButton_copyPath_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 25);
+            // 
             // fastColoredTextBox1
             // 
             this.fastColoredTextBox1.AutoCompleteBracketsList = new char[] {
@@ -181,7 +241,7 @@
         '\''};
             this.fastColoredTextBox1.AutoIndent = false;
             this.fastColoredTextBox1.AutoIndentCharsPatterns = "";
-            this.fastColoredTextBox1.AutoScrollMinSize = new System.Drawing.Size(181, 30);
+            this.fastColoredTextBox1.AutoScrollMinSize = new System.Drawing.Size(29, 16);
             this.fastColoredTextBox1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.fastColoredTextBox1.BackBrush = null;
             this.fastColoredTextBox1.CharHeight = 14;
@@ -191,9 +251,11 @@
             this.fastColoredTextBox1.DelayedTextChangedInterval = 300;
             this.fastColoredTextBox1.DisabledColor = System.Drawing.Color.FromArgb(((int)(((byte)(100)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))), ((int)(((byte)(180)))));
             this.fastColoredTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fastColoredTextBox1.Font = new System.Drawing.Font("Courier New", 9.75F);
             this.fastColoredTextBox1.HighlightingRangeType = FastColoredTextBoxNS.HighlightingRangeType.AllTextRange;
             this.fastColoredTextBox1.IsReplaceMode = false;
             this.fastColoredTextBox1.LeftBracket = '(';
+            this.fastColoredTextBox1.LineNumberColor = System.Drawing.Color.SlateGray;
             this.fastColoredTextBox1.Location = new System.Drawing.Point(0, 25);
             this.fastColoredTextBox1.Name = "fastColoredTextBox1";
             this.fastColoredTextBox1.Paddings = new System.Windows.Forms.Padding(1);
@@ -202,7 +264,6 @@
             this.fastColoredTextBox1.ServiceColors = ((FastColoredTextBoxNS.ServiceColors)(resources.GetObject("fastColoredTextBox1.ServiceColors")));
             this.fastColoredTextBox1.Size = new System.Drawing.Size(847, 574);
             this.fastColoredTextBox1.TabIndex = 3;
-            this.fastColoredTextBox1.Text = "select * from test\r\n where field = :val";
             this.fastColoredTextBox1.VirtualSpace = true;
             this.fastColoredTextBox1.WordWrapIndent = 10;
             this.fastColoredTextBox1.Zoom = 100;
@@ -244,5 +305,11 @@
         private System.Windows.Forms.ToolStripButton tsb_ExecuteSql;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton toolStripButton6;
+        private System.Windows.Forms.ToolStripDropDownButton toolStripDropDownButton_Frame;
+        private System.Windows.Forms.ToolStripMenuItem forPBCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem unFrmaeFromPBCodeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripButton_copyPath;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+        private System.Windows.Forms.ToolStripButton toolStripButton_count;
     }
 }

@@ -495,6 +495,34 @@ namespace PBSCAnalyzer
                 SourceContainerDocument.ExecuteSqlSelection();
                 e.Handled = true;
             }
+            if ((e.Shift && e.Control)) {
+                if (e.KeyCode == Keys.S)
+                {
+                    if (fastColoredTextBox1.SelectedText.Length > 0)
+                    {
+                        var start = fastColoredTextBox1.SelectionStart;
+                        string res = "Select * FROM " + fastColoredTextBox1.SelectedText;
+                        fastColoredTextBox1.SelectedText = res;
+                        fastColoredTextBox1.SelectionStart = start;
+                        fastColoredTextBox1.SelectionLength = res.Length;
+                        //SourceContainerDocument.ExecuteSqlSelection();
+                        e.Handled = true;
+                    }
+                }
+                if (e.KeyCode == Keys.C)
+                {
+                    if (fastColoredTextBox1.SelectedText.Length > 0)
+                    {
+                        var start = fastColoredTextBox1.SelectionStart;
+                        string res = "Select COUNT(*) FROM " + fastColoredTextBox1.SelectedText;
+                        fastColoredTextBox1.SelectedText = res;
+                        fastColoredTextBox1.SelectionStart = start;
+                        fastColoredTextBox1.SelectionLength = res.Length;
+                        //SourceContainerDocument.ExecuteSqlSelection();
+                        e.Handled = true;
+                    }
+                }
+            }
         }
 
         private void toolStripLabel1_Click(object sender, EventArgs e)
@@ -553,6 +581,41 @@ namespace PBSCAnalyzer
                 fastColoredTextBox1.Text = result;
 
             }
+        }
+
+        private void forPBCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string text = GetSelectedOrText();
+            string[] lines = text.Split(
+                    new string[] { "\r\n", "\r", "\n" },
+                    StringSplitOptions.None
+                );
+            string result = "ls_sql = \" \" + &"+Environment.NewLine;
+            foreach(var line in lines)
+            {
+                result += "\" " + line + " \" + &" + Environment.NewLine;
+            }
+            //result = result+"+\"\"";
+            Clipboard.SetText(result);
+        }
+
+        private string GetSelectedOrText()
+        {
+            var isSelected = fastColoredTextBox1.SelectedText.Length > 0;
+            var selectedText = !isSelected ? fastColoredTextBox1.Text : fastColoredTextBox1.SelectedText;
+            
+            return selectedText;
+        }
+
+        private void toolStripButton_copyPath_Click(object sender, EventArgs e)
+        {
+            
+            Clipboard.SetText(FileClass.FilePath);
+        }
+
+        private void toolStripButton_count_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

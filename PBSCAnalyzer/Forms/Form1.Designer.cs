@@ -87,7 +87,7 @@
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(2856, 35);
+            this.menuStrip1.Size = new System.Drawing.Size(2564, 33);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -227,11 +227,11 @@
             this.toolStripButton4,
             this.toolStripSeparator2,
             this.tsb_ReadRegistryDbConfig});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 35);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 33);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Padding = new System.Windows.Forms.Padding(0, 0, 3, 0);
             this.toolStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.System;
-            this.toolStrip1.Size = new System.Drawing.Size(2856, 33);
+            this.toolStrip1.Size = new System.Drawing.Size(2564, 33);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -303,10 +303,10 @@
             // MainDockPanel
             // 
             this.MainDockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.MainDockPanel.Location = new System.Drawing.Point(0, 68);
+            this.MainDockPanel.Location = new System.Drawing.Point(0, 66);
             this.MainDockPanel.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MainDockPanel.Name = "MainDockPanel";
-            this.MainDockPanel.Size = new System.Drawing.Size(2856, 1534);
+            this.MainDockPanel.Size = new System.Drawing.Size(2564, 1504);
             dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
             dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
@@ -328,7 +328,7 @@
             tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
             dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
+            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
             tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
@@ -360,7 +360,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(2856, 1602);
+            this.ClientSize = new System.Drawing.Size(2564, 1570);
             this.Controls.Add(this.MainDockPanel);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.menuStrip1);
@@ -369,7 +369,9 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

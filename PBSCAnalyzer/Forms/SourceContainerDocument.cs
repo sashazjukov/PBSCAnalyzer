@@ -58,7 +58,7 @@ namespace PBSCAnalyzer
             if (e.CloseReason != CloseReason.UserClosing) return;
             if (MainEngine.Instance.CloseInBatch == false)
             {
-                //MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                 if (App.Configuration.SaveOnCloseOpenDocument)
                 {
                     MainEngine.Instance.SaveWorkSpace();
@@ -74,7 +74,7 @@ namespace PBSCAnalyzer
             
             if (MainEngine.Instance.CloseInBatch == false)
             {                
-                //MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                MainEngine.Instance.OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                 if (App.Configuration.SaveOnCloseOpenDocument)
                 {
                     MainEngine.Instance.SaveWorkSpace();

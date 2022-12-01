@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -115,7 +116,7 @@ namespace PBSCAnalyzer
                     }
                     fileClass.IsOpened = true;
                     newDocument = CreateNewDocument(fileClass);
-                    //OpenedDocumentsPanel.RefreshOpenedDocumentsList();
+                    OpenedDocumentsPanel.RefreshOpenedDocumentsList();
                     if (App.Configuration.SaveOnCloseOpenDocument)
                     {
                         if (MainEngine.Instance.IsLoadingWorkspase == false)
@@ -188,7 +189,7 @@ namespace PBSCAnalyzer
             _currentProgress = 1;
             _maxProgress = 0;
 
-           // GeneralTreeNodeCollection.ForEach(x => _maxProgress += x.Nodes.Count);
+            // GeneralTreeNodeCollection.ForEach(x => _maxProgress += x.Nodes.Count);
             SetSolutionTreeStatusText("Searching...");
             SetSearchProgress(0);
 
@@ -196,14 +197,18 @@ namespace PBSCAnalyzer
 
             foreach (TreeNode treeNode in GeneralTreeNodeCollection)
             {
-                var clonedNode = (TreeNode) treeNode.Clone();
-                treeNodeCollection.Add(clonedNode);
+
+                var clonedNode = (TreeNode)treeNode.Clone();
+
+                //treeNodeCollection.Add(clonedNode);
                 //TreeNode parentfolderNode = clonedNode;
+
+                ProcessFindInNodes(clonedNode, clonedNode.Nodes, eSearchIn, lower, text, searchInFileCriteria, null);
+
+                SetSearchProgress((int)(((float)(_currentProgress) / _maxProgress) * 100));
+                treeNodeCollection.Add(clonedNode);
             }
 
-            ProcessFindInNodes(null,treeNodeCollection, eSearchIn, lower, text, searchInFileCriteria, null);
-         
-            SetSearchProgress((int)(((float)(_currentProgress) / _maxProgress) * 100));
             SetSolutionTreeStatusText("Ready.");
             if (eSearchIn == ESearchIn.OpenedDocuments)
             {
@@ -212,7 +217,10 @@ namespace PBSCAnalyzer
             }
             else
             { if (eSearchIn == ESearchIn.FileName) { SetSolutionTreeStatusText($"{_totalFiind} file names match '{text}'"); } }
-            { if (eSearchIn == ESearchIn.FileText) { SetSolutionTreeStatusText($"{_totalFiind} files containing '{text}'"); } }            
+            { if (eSearchIn == ESearchIn.FileText) { SetSolutionTreeStatusText($"{_totalFiind} files containing '{text}'"); } }
+
+
+
             if (treeView.Nodes.Count > 0)
             {
                 treeView.SelectedNode = treeView.Nodes[0];
@@ -225,7 +233,7 @@ namespace PBSCAnalyzer
             {
                 //_currentProgress++;
                 var toRemove = new List<TreeNode>();
-                foreach (TreeNode fileNode in treeNodeCollection)
+                foreach (TreeNode fileNode in folderNode.Nodes)
                 {
                     var fileClass = (fileNode.Tag as FileClass);
                     if (fileClass == null) { ProcessFindInNodes(fileNode, fileNode.Nodes, eSearchIn, lower, text, searchInFileCriteria, toRemove); }
@@ -783,7 +791,7 @@ namespace PBSCAnalyzer
         public void LoadDocumentsListFromWorkspace(bool reloadFileContent = false)
         {
             var workSpaceItem = GetWorkspace(App.Configuration.CurrentWorkSpaceName);
-            foreach (var fileClassInWorkspace in workSpaceItem.FileClasses)
+            foreach (FileClassInWorkspace fileClassInWorkspace in workSpaceItem.FileClasses)
             {
                 var findNodeByFileClass = FindNodeByFileClass(x =>x.FilePath == fileClassInWorkspace.FilePath, SolutionTree.treeView1.Nodes);
                 if (findNodeByFileClass != null) { OpenOrSwitchFile(findNodeByFileClass.Tag as FileClass, reloadFileContent); }

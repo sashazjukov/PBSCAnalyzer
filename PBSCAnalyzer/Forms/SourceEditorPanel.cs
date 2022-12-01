@@ -328,14 +328,18 @@ namespace PBSCAnalyzer
             SourceContainerDocument.AnalyzeSource();
         }
 
-        public void NavigateToSourceLine(int lineNum)
+        public void NavigateToSourceLine(int lineNum, bool lb_top = false)
         {
             this.Show();
             _isdisableHighlightingObjectOnce = true;
             fastColoredTextBox1.BeginUpdate();            
             fastColoredTextBox1.Navigate(lineNum);
-            //fastColoredTextBox1.Navigate(fastColoredTextBox1.VisibleRange.Start.iLine);
-            fastColoredTextBox1.ScrollLeft();
+            if (lb_top)
+            {
+                fastColoredTextBox1.Navigate(fastColoredTextBox1.VisibleRange.End.iLine);
+                fastColoredTextBox1.Selection.Start =new Place(1,fastColoredTextBox1.VisibleRange.Start.iLine + 1);
+            }
+            if (IsSqlSyntax == false) { SourceContainerDocument.HighlightObjectInObjectExplorer(fastColoredTextBox1.Selection.FromLine); }
             fastColoredTextBox1.EndUpdate();
         }
 

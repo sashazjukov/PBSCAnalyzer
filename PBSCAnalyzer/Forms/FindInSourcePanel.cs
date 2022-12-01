@@ -42,7 +42,8 @@ namespace PBSCAnalyzer
                 if (!string.IsNullOrEmpty(result.Value))
                 {                    
                     SourceEditorPanel.Show();
-                    SourceEditorPanel.fastColoredTextBox1.Navigate(Convert.ToInt32(result.Value));
+                    SourceEditorPanel.NavigateToSourceLine(Convert.ToInt32(result.Value));
+                    //SourceEditorPanel.fastColoredTextBox1.Navigate(Convert.ToInt32(result.Value));                    
                     SearchResult_fctb.Focus();
                 }
 

@@ -47,7 +47,7 @@ namespace PBSCAnalyzer
                 else if (fileClass.IsSql == false)
                 {
                     treeView1.Nodes.Clear();
-                    foreach (PowerBuilderFileType powerBuilderFileType in fileClass.PowerBuilderFileTypes)
+                    foreach (PowerBuilderFileType powerBuilderFileType in fileClass.PowerBuilderFileTypes.OrderBy(x=>x.InheritFrom).ThenBy(x=>x.Name))
                     {
                         MainEngine.Instance.FillRnCounts(fileClass.Text);
 
@@ -250,10 +250,11 @@ namespace PBSCAnalyzer
 
         private void treeView1_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
+            //treeView1.BeginUpdate();
             if (e.Node != null && e.X > 40)
             {
                 if (toolStripButton3.Checked)
-                {
+                {                    
                     if ((e.Node.Parent != null && e.Node.Parent.IsExpanded == false) || e.Node.Nodes.Count > 0 && e.Node.IsExpanded == false)
                     {
                         treeView1.CollapseAll();
@@ -264,6 +265,7 @@ namespace PBSCAnalyzer
                 //treeView1.EndUpdate();
             }
             ExpandChildeDataWindowsNode(e.Node);
+            //treeView1.EndUpdate();
         }
 
         private void ExpandChildeDataWindowsNode(TreeNode node)

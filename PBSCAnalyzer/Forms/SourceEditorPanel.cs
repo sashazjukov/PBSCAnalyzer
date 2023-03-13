@@ -328,7 +328,7 @@ namespace PBSCAnalyzer
             SourceContainerDocument.AnalyzeSource();
         }
 
-        public void NavigateToSourceLine(int lineNum, bool lb_top = false)
+        public void NavigateToSourceLine(int lineNum, bool lb_top = false, bool lb_syncObjectExplorer = true)
         {
             this.Show();
             _isdisableHighlightingObjectOnce = true;
@@ -336,10 +336,13 @@ namespace PBSCAnalyzer
             fastColoredTextBox1.Navigate(lineNum);
             if (lb_top)
             {
-                fastColoredTextBox1.Navigate(fastColoredTextBox1.VisibleRange.End.iLine);
-                fastColoredTextBox1.Selection.Start =new Place(1,fastColoredTextBox1.VisibleRange.Start.iLine + 1);
+                if (!IsSqlSyntax)
+                {
+                    fastColoredTextBox1.Navigate(fastColoredTextBox1.VisibleRange.End.iLine);
+                    fastColoredTextBox1.Selection.Start = new Place(1, fastColoredTextBox1.VisibleRange.Start.iLine + 1);
+                }
             }
-            if (IsSqlSyntax == false) { SourceContainerDocument.HighlightObjectInObjectExplorer(fastColoredTextBox1.Selection.FromLine); }
+            if (lb_syncObjectExplorer && IsSqlSyntax == false) { SourceContainerDocument.HighlightObjectInObjectExplorer(fastColoredTextBox1.Selection.FromLine); }
             fastColoredTextBox1.EndUpdate();
         }
 
@@ -529,50 +532,10 @@ namespace PBSCAnalyzer
             }
         }
 
-        private void toolStripLabel1_Click(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void selectTop100FromToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string datawindowName = Clipboard.GetText();
-            if (string.IsNullOrEmpty(datawindowName))
-            {
-                datawindowName = "";
-            }
-
-            string result = "SELECT TOP 100 * FROM " + datawindowName + " ";
-            fastColoredTextBox1.AppendText("\r\n" + result);
-        }
-
-        private void caseNumberToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string datawindowName = Clipboard.GetText();
-            if (string.IsNullOrEmpty(datawindowName))
-            {
-                datawindowName = "";
-            }
-
-            string result = "SELECT * FROM vw_case_number WHERE CASE_NUMBER like '" + datawindowName + "' ";
-            fastColoredTextBox1.AppendText("\r\n" + result);
-        }
-
-        private void byCaseIdToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string datawindowName = Clipboard.GetText();
-            if (string.IsNullOrEmpty(datawindowName))
-            {
-                datawindowName = "";
-            }
-
-            string result = "SELECT * FROM vw_case_number WHERE case_id = " + datawindowName + " ";            
-            fastColoredTextBox1.AppendText("\r\n"+result);
-        }
-
+                      
         private void toolStripButton6_Click(object sender, EventArgs e)
         {
-            PoorMansTSqlFormatterLib.SqlFormattingManager fullFormatter = new PoorMansTSqlFormatterLib.SqlFormattingManager(new PoorMansTSqlFormatterLib.Formatters.TSqlStandardFormatter());
+            PoorMansTSqlFormatterLib.SqlFormattingManager fullFormatter = new PoorMansTSqlFormatterLib.SqlFormattingManager(new PoorMansTSqlFormatterLib.Formatters.TSqlStandardFormatter(new PoorMansTSqlFormatterLib.Formatters.TSqlStandardFormatterOptions {ExpandCommaLists = true }));
             var isSelected = fastColoredTextBox1.SelectedText.Length > 0;
             var selectedText = !isSelected ? fastColoredTextBox1.Text : fastColoredTextBox1.SelectedText;
             var result = fullFormatter.Format(selectedText);

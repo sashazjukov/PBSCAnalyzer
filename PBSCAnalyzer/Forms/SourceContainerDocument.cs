@@ -217,7 +217,7 @@ namespace PBSCAnalyzer
                     lineNumber = filePositionItem.LineNumberStart;
                 }
             }
-            if (lineNumber > 1) { SourceEditorPanel.NavigateToSourceLine(lineNumber, true); }
+            if (lineNumber > 1) { SourceEditorPanel.NavigateToSourceLine(lineNumber, true,false); }
 
         }
 

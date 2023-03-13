@@ -8,8 +8,14 @@ namespace PBSCAnalyzer
     {
         public static void SetSourceRules(object sender, bool isSql, FileClass fileClass)
         {
-
             var fctb = (FastColoredTextBox)sender;
+            if (fileClass.FilePath.Contains(".cs") && !isSql)
+            {
+                //fctb.Language = Language.CSharp;
+                //fctb.HighlightingRangeType  = HighlightingRangeType.AllTextRange;
+                //return;
+            }
+
             var range = fctb.Range;
             //var range = fctb.Range;
             range.BeginUpdate();

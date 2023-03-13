@@ -369,6 +369,7 @@ namespace PBSCAnalyzer
 
             var files = Directory.GetFiles(selectedPath, "*.sr*").ToList();
             files.AddRange(Directory.GetFiles(selectedPath, "*.sql"));
+            files.AddRange(Directory.GetFiles(selectedPath, "*.cs"));
 
             foreach (string file in files)
              {

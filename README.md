@@ -8,7 +8,7 @@
 * Fast RegEx based text search;
 * Custom batch commands over the file (SVN Log, SVN Balme, Edit file by external application);
 * Workspaces to manage different projects
-* DataWindow debugging helper
+* DataWindow debugging helper (https://youtu.be/X_bXHpUvf1s)
 
 ***New in version 1.0.2.1:***
 * Format and execute SQL queries.

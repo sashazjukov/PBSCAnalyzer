@@ -25,6 +25,8 @@ Snippets can be edited in UserTextSnippetsConfig.xml file
 Download and unzip the latest binaries [PBSC Analyzer v1.1.0.0](https://github.com/sashazjukov/PBSCAnalyzer/releases)
 
 ***Quick start (version 1.0.0.0)***
+Watch video: https://youtu.be/f6fwpjMWeTg
+
 * Add sources to the curent workspace
 
 _**Note:** It uses extracted PowerBuilder objects (\*.sr\*) for analyzing.

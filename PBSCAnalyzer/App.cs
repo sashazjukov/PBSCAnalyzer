@@ -59,13 +59,11 @@ namespace PBSCAnalyzer
                             new UserTextSnippet()
                             {
                                 IsMenu = true,
-                                Caption = "vw_case_number",
+                                Caption = "Sub_Menu",
                                 Text = "",
                                 SubSnippets = new List<UserTextSnippet>()
                                 {
-                                    new UserTextSnippet() {IsMenu = false, Caption = "", Text = "SELECT * FROM vw_case_number WHERE CASE_NUMBER like '{1}' "},
-                                    new UserTextSnippet() {IsMenu = false, Caption = "", Text = "SELECT * FROM vw_case_number WHERE case_id = {1} "},
-                                    new UserTextSnippet() {IsMenu = false, Caption = "", Text = " WHERE Case_id in (SELECT case_id FROM vw_case_number WHERE CASE_NUMBER like '{1}') "}
+                                    new UserTextSnippet() {IsMenu = false, Caption = "", Text = "SELECT * FROM  '{1}' "},
                                 }
                             }
                         }

@@ -103,7 +103,7 @@ namespace PBSCAnalyzer
                             textInstanceRange = fileClass.Text.Substring(powerBuilderFileType.IndexStart, length);
                                                         
                             MatchCollection matchesCollection = Regex.Matches(textInstanceRange, @"[\r\n](\s*)(this\.)?dataobject\s*\=\s*?(?<dataobj>(.)+)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
-                            MatchCollection matchesCollection2 = Regex.Matches(fileClass.Text, @"[\r\n](\s*)" + powerBuilderFileType.Name + @"\.dataobject\s*\=\s*?(?<dataobj>(.)+)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
+                            MatchCollection matchesCollection2 = Regex.Matches(fileClass.Text, $@"[\r\n](\s*){powerBuilderFileType.Name}\.dataobject\s*\=\s*?(?<dataobj>(.)+)", RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase);
                             Action <MatchCollection,int> action = (MatchCollection matches, int indexOffset) =>
                                             {
 
